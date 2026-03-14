@@ -5,6 +5,7 @@
 use chrono::{DateTime, Utc};
 use clap::ValueEnum;
 use serde::{Deserialize, Serialize};
+use serde::de::Deserializer;
 
 /// Supported queue persistence targets.
 #[derive(Debug, Clone, Copy, Serialize, Deserialize, ValueEnum, PartialEq, Eq, Default)]
@@ -162,11 +163,24 @@ pub struct TaskAssessment {
     /// Clarity score `0..=100`.
     pub clarity_score: u8,
     /// Suggested priority for the queue item.
+    #[serde(deserialize_with = "deserialize_priority")]
+    #[serde(default = "default_priority")]
     pub priority: String,
     /// Validation rationale.
     pub rationale: String,
     /// Missing information that prevented a stronger decision.
     pub missing_information: Vec<String>,
+}
+
+fn default_priority() -> String {
+    "normal".to_string()
+}
+
+fn deserialize_priority<'de, D>(deserializer: D) -> Result<String, D::Error>
+where
+    D: Deserializer<'de>,
+{
+    Option::<String>::deserialize(deserializer).map(|value| value.unwrap_or_else(default_priority))
 }
 
 /// Persistence result for a queue-worthy email.
