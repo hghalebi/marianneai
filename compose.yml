@@ -1,0 +1,15 @@
+services:
+  open-data-service:
+    build:
+      context: .
+      dockerfile: services/open-data-service/Dockerfile
+    container_name: marianneai-open-data-service
+    env_file:
+      - services/open-data-service/.env.example
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./shared:/workspace/shared
+      - ./services/open-data-service:/workspace/services/open-data-service
+    working_dir: /workspace/services/open-data-service
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
