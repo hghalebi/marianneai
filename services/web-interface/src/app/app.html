@@ -1,12 +1,12 @@
-<div class="min-h-screen bg-gray-50 text-gray-900 font-sans flex flex-col">
-  <header class="bg-white shadow-sm border-b border-gray-200">
+<div class="app-shell min-h-screen bg-gray-50 text-gray-900 font-sans flex flex-col">
+  <header class="header-surface bg-white/90 shadow-sm border-b border-gray-200">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex flex-col sm:flex-row items-center justify-between gap-4">
-      <div class="flex items-center space-x-3">
-        <img src="logo.png" alt="MarianneAI Logo" class="h-12 w-auto object-contain" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
+      <div class="brand-lockup flex items-center space-x-3">
+        <img src="logo-mariene.png" alt="MarianneAI Logo" class="brand-logo h-12 w-auto object-contain" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
         <div class="hidden items-center justify-center w-10 h-10 rounded-full bg-gradient-to-br from-[#002654] via-white to-[#ED2939] shadow-md border border-gray-100">
           <span class="text-[#002654] font-bold text-lg">M</span>
         </div>
-        <div>
+        <div class="brand-copy">
           <h1 class="text-2xl font-bold text-[#002654] tracking-tight">Marianne<span class="text-[#ED2939]">AI</span></h1>
           <p class="text-xs text-gray-500 font-medium hidden sm:block">L'IA citoyenne pour comprendre les données publiques</p>
         </div>
@@ -14,31 +14,31 @@
 
       <div class="flex items-center">
         @if (apiService.isMockMode()) {
-          <span class="text-[10px] bg-yellow-100 text-yellow-800 px-2.5 py-1.5 rounded font-bold uppercase tracking-wide border border-yellow-200 whitespace-nowrap" title="Le backend est inaccessible. Données simulées.">Mode Démo</span>
+          <span class="status-badge text-[10px] bg-yellow-100 text-yellow-800 px-2.5 py-1.5 rounded font-bold uppercase tracking-wide border border-yellow-200 whitespace-nowrap" title="Le backend est inaccessible. Données simulées.">Mode Démo</span>
         } @else {
-          <span class="text-[10px] bg-green-100 text-green-800 px-2.5 py-1.5 rounded font-bold uppercase tracking-wide border border-green-200 whitespace-nowrap" title="Connecté au backend avec succès.">En Ligne</span>
+          <span class="status-badge text-[10px] bg-green-100 text-green-800 px-2.5 py-1.5 rounded font-bold uppercase tracking-wide border border-green-200 whitespace-nowrap" title="Connecté au backend avec succès.">En Ligne</span>
         }
       </div>
     </div>
   </header>
 
   <main class="flex-grow flex flex-col items-center pt-12 pb-24 px-4 sm:px-6 lg:px-8 w-full max-w-4xl mx-auto">
-    <div class="w-full text-center mb-8 transition-all duration-500" [ngClass]="{'mt-16': !response() && !isLoading()}">
+    <div class="hero-panel w-full text-center mb-8 transition-all duration-500" [ngClass]="{'mt-16': !response() && !isLoading()}">
       @if (!response() && !isLoading()) {
         <h2 class="text-3xl sm:text-4xl font-extrabold text-gray-900 mb-4">
           Que cherchez-vous sur <span class="text-[#002654]">data.gouv.fr</span> ?
         </h2>
       }
-      
-      <div class="relative max-w-3xl mx-auto">
+
+      <div class="search-shell relative max-w-3xl mx-auto">
         <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-          <svg class="h-6 w-6 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <svg class="search-icon h-6 w-6 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
           </svg>
         </div>
-        <input 
-          type="text" 
-          [ngModel]="queryText()" 
+        <input
+          type="text"
+          [ngModel]="queryText()"
           (ngModelChange)="queryText.set($event)"
           (keyup.enter)="submitQuery()"
           [disabled]="isLoading()"
@@ -46,10 +46,10 @@
           placeholder="Ex: Quels sont les derniers jeux de données sur les bornes de recharge électrique en France ?"
         >
         <div class="absolute inset-y-0 right-0 pr-2 flex items-center">
-          <button 
+          <button
             (click)="submitQuery()"
             [disabled]="isLoading() || !queryText().trim()"
-            class="p-2 bg-[#002654] text-white rounded-xl hover:bg-[#001b3d] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#002654] disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+            class="interactive-button p-2 bg-[#002654] text-white rounded-xl hover:bg-[#001b3d] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#002654] disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
           >
             <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
@@ -60,10 +60,11 @@
 
       @if (!response() && !isLoading() && scenarios().length > 0) {
         <div class="mt-6 flex flex-wrap justify-center gap-2">
-          @for (scenario of scenarios(); track scenario) {
-            <button 
+          @for (scenario of scenarios(); track scenario; let i = $index) {
+            <button
               (click)="selectScenario(scenario)"
-              class="px-4 py-2 rounded-full bg-white border border-gray-200 text-sm text-gray-600 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-900 transition-colors shadow-sm text-left max-w-full truncate"
+              [style.--stagger]="(i * 75) + 'ms'"
+              class="suggestion-chip px-4 py-2 rounded-full bg-white border border-gray-200 text-sm text-gray-600 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-900 transition-colors shadow-sm text-left max-w-full truncate"
             >
               {{ scenario }}
             </button>
@@ -73,13 +74,13 @@
     </div>
 
     @if (isLoading()) {
-      <div class="w-full max-w-3xl bg-white rounded-2xl shadow-sm border border-gray-100 p-8 flex flex-col items-center justify-center space-y-6 animate-pulse">
+      <div class="loading-card w-full max-w-3xl bg-white rounded-2xl shadow-sm border border-gray-100 p-8 flex flex-col items-center justify-center space-y-6 animate-pulse">
         <div class="relative w-16 h-16">
           <div class="absolute inset-0 rounded-full border-4 border-gray-100"></div>
           <div class="absolute inset-0 rounded-full border-4 border-[#002654] border-t-transparent animate-spin"></div>
           <div class="absolute inset-2 rounded-full border-4 border-[#ED2939] border-b-transparent animate-spin" style="animation-direction: reverse; animation-duration: 1.5s;"></div>
         </div>
-        <div class="text-center">
+        <div class="loading-copy text-center">
           <h3 class="text-lg font-medium text-gray-900">{{ loadingMessages[currentLoadingMessageIndex()] }}</h3>
           <p class="text-sm text-gray-500 mt-2">Nos agents IA parcourent data.gouv.fr pour vous...</p>
         </div>
@@ -87,22 +88,25 @@
     }
 
     @if (response() && !isLoading()) {
-      <div class="w-full max-w-3xl space-y-6 animate-fade-in">
+      <div class="result-stack w-full max-w-3xl space-y-6 animate-fade-in">
         <div class="flex justify-end">
           <button
             type="button"
             (click)="downloadPdf()"
             [disabled]="isDownloadingPdf()"
-            class="inline-flex items-center gap-2 rounded-xl border border-gray-200 bg-white px-4 py-2 text-sm font-semibold text-[#002654] shadow-sm transition-colors hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-60"
+            class="pdf-button interactive-button card-enter inline-flex items-center gap-2 rounded-xl border border-gray-200 bg-white px-4 py-2 text-sm font-semibold text-[#002654] shadow-sm transition-colors hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-60"
           >
             <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 16V4m0 12l-4-4m4 4l4-4M4 20h16" />
             </svg>
-            {{ isDownloadingPdf() ? 'Génération du PDF...' : 'Télécharger le rapport en PDF' }}
+            {{ isDownloadingPdf() ? 'Génération du PDF stylé...' : 'Télécharger le PDF stylé' }}
           </button>
         </div>
+        @if (pdfErrorMessage()) {
+          <p class="pdf-feedback text-sm text-red-600 text-right">{{ pdfErrorMessage() }}</p>
+        }
 
-        <div class="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
+        <div class="result-card card-enter delay-1 bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
           <div class="bg-[#002654] px-6 py-4 flex items-center space-x-3">
             <svg class="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
@@ -115,7 +119,7 @@
         </div>
 
         @if (response()?.selected_sources?.length) {
-          <div class="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
+          <div class="result-card card-enter delay-2 bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
             <div class="bg-gray-50 px-6 py-4 border-b border-gray-200 flex items-center space-x-3">
               <svg class="h-5 w-5 text-[#002654]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
@@ -123,8 +127,8 @@
               <h3 class="text-md font-semibold text-gray-900">Sources utilisées ({{ response()?.selected_sources?.length }})</h3>
             </div>
             <div class="divide-y divide-gray-100">
-              @for (source of response()?.selected_sources; track source.url) {
-                <div class="p-6 hover:bg-gray-50 transition-colors">
+              @for (source of response()?.selected_sources; track source.url; let i = $index) {
+                <div class="source-item p-6 hover:bg-gray-50 transition-colors" [style.--stagger]="(i * 85) + 'ms'">
                   <div class="flex justify-between items-start mb-2">
                     <a [href]="source.url" target="_blank" rel="noopener noreferrer" class="text-lg font-medium text-[#002654] hover:underline flex items-center">
                       {{ source.title }}
@@ -132,8 +136,7 @@
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
                       </svg>
                     </a>
-                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium" 
-                          [ngClass]="source.confidence_score >= 0.8 ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'">
+                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium" [ngClass]="source.confidence_score >= 0.8 ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'">
                       Score: {{ source.confidence_score | percent }}
                     </span>
                   </div>
@@ -148,7 +151,7 @@
         }
 
         @if (response()?.limitations?.length) {
-          <div class="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
+          <div class="result-card card-enter delay-3 bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
             <div class="bg-gray-50 px-6 py-4 border-b border-gray-200 flex items-center space-x-3">
               <svg class="h-5 w-5 text-[#ED2939]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
@@ -165,8 +168,8 @@
           </div>
         }
 
-        <details class="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden group">
-          <summary class="bg-gray-50 px-6 py-4 flex items-center justify-between cursor-pointer hover:bg-gray-100 transition-colors">
+        <details class="trace-card result-card card-enter delay-4 bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden group">
+          <summary class="trace-summary bg-gray-50 px-6 py-4 flex items-center justify-between cursor-pointer hover:bg-gray-100 transition-colors">
             <div class="flex items-center space-x-3">
               <svg class="h-5 w-5 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
@@ -177,15 +180,14 @@
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
             </svg>
           </summary>
-          <div class="p-6 bg-gray-900 text-gray-300 font-mono text-xs overflow-x-auto rounded-b-2xl">
+          <div class="trace-panel p-6 bg-gray-900 text-gray-300 font-mono text-xs overflow-x-auto rounded-b-2xl">
             @for (step of response()?.trace; track step; let i = $index) {
-              <div class="mb-1">
+              <div class="trace-line mb-1" [style.--stagger]="(i * 70) + 'ms'">
                 <span class="text-green-400">[{{ i + 1 }}]</span> {{ step }}
               </div>
             }
           </div>
         </details>
-
       </div>
     }
   </main>

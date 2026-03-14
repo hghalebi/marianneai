@@ -1,22 +1,7 @@
+import {HttpClient, HttpResponse} from '@angular/common/http';
 import {Injectable, inject, signal} from '@angular/core';
-import {HttpClient} from '@angular/common/http';
 import {Observable, catchError, of, tap} from 'rxjs';
-
-export interface Source {
-  title: string;
-  url: string;
-  description: string;
-  reason_for_selection: string;
-  confidence_score: number;
-}
-
-export interface QueryResponse {
-  user_query: string;
-  selected_sources: Source[];
-  answer: string;
-  limitations: string[];
-  trace: string[];
-}
+import {QueryResponse} from './report.types';
 
 export interface ScenariosResponse {
   scenarios: string[];
@@ -28,6 +13,7 @@ export class ApiService {
 
   private readonly queryEndpoint = '/api/query';
   private readonly scenariosEndpoint = '/api/demo/scenarios';
+  private readonly reportPdfEndpoint = '/api/report/pdf';
   isMockMode = signal(false);
 
   query(text: string): Observable<QueryResponse> {
@@ -81,5 +67,12 @@ export class ApiService {
         });
       })
     );
+  }
+
+  downloadStyledPdf(report: QueryResponse): Observable<HttpResponse<Blob>> {
+    return this.http.post(this.reportPdfEndpoint, report, {
+      observe: 'response',
+      responseType: 'blob',
+    });
   }
 }

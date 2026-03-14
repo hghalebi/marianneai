@@ -28,6 +28,10 @@
               {
                 "glob": "**/*",
                 "input": "public"
+              },
+              {
+                "glob": "logo-mariene.png",
+                "input": "."
               }
             ],
             "styles": [

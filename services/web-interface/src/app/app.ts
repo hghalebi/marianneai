@@ -1,7 +1,9 @@
 import {CommonModule, isPlatformBrowser} from '@angular/common';
 import {ChangeDetectionStrategy, Component, inject, OnInit, PLATFORM_ID, signal} from '@angular/core';
 import {FormsModule} from '@angular/forms';
-import {ApiService, QueryResponse} from './api.service';
+import {firstValueFrom} from 'rxjs';
+import {ApiService} from './api.service';
+import {QueryResponse} from './report.types';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -17,6 +19,7 @@ export class App implements OnInit {
   queryText = signal('');
   isLoading = signal(false);
   isDownloadingPdf = signal(false);
+  pdfErrorMessage = signal<string | null>(null);
   response = signal<QueryResponse | null>(null);
   scenarios = signal<string[]>([]);
 
@@ -50,6 +53,7 @@ export class App implements OnInit {
 
     this.isLoading.set(true);
     this.response.set(null);
+    this.pdfErrorMessage.set(null);
     this.currentLoadingMessageIndex.set(0);
 
     this.loadingInterval = setInterval(() => {
@@ -76,95 +80,47 @@ export class App implements OnInit {
     }
 
     this.isDownloadingPdf.set(true);
+    this.pdfErrorMessage.set(null);
 
     try {
-      const {jsPDF} = await import('jspdf');
-      const pdf = new jsPDF({format: 'a4', unit: 'mm'});
-      const margin = 16;
-      const pageHeight = pdf.internal.pageSize.getHeight();
-      const contentWidth = pdf.internal.pageSize.getWidth() - margin * 2;
-      const lineHeight = 6;
-      let cursorY = margin;
+      const response = await firstValueFrom(this.apiService.downloadStyledPdf(report));
+      const fileName = this.extractFileName(response.headers.get('content-disposition'));
+      const pdfBlob = response.body;
 
-      const ensureSpace = (requiredHeight = lineHeight) => {
-        if (cursorY + requiredHeight <= pageHeight - margin) {
-          return;
-        }
-
-        pdf.addPage();
-        cursorY = margin;
-      };
-
-      const addParagraph = (text: string, indent = 0) => {
-        const lines = pdf.splitTextToSize(text, contentWidth - indent);
-        ensureSpace(lines.length * lineHeight + 2);
-        pdf.setFont('helvetica', 'normal');
-        pdf.setFontSize(11);
-        pdf.text(lines, margin + indent, cursorY);
-        cursorY += lines.length * lineHeight + 2;
-      };
-
-      const addSectionTitle = (text: string) => {
-        ensureSpace(10);
-        pdf.setFont('helvetica', 'bold');
-        pdf.setFontSize(13);
-        pdf.text(text, margin, cursorY);
-        cursorY += 8;
-      };
-
-      const addBulletList = (items: string[]) => {
-        items.forEach((item) => addParagraph(`• ${item}`, 2));
-        cursorY += 1;
-      };
-
-      pdf.setFont('helvetica', 'bold');
-      pdf.setFontSize(18);
-      pdf.text('Rapport MarianneAI', margin, cursorY);
-      cursorY += 10;
-
-      addParagraph(`Généré le ${new Intl.DateTimeFormat('fr-FR', {
-        dateStyle: 'full',
-        timeStyle: 'short',
-      }).format(new Date())}`);
-
-      addSectionTitle('Question');
-      addParagraph(report.user_query);
-
-      addSectionTitle('Réponse');
-      addParagraph(report.answer);
-
-      if (report.selected_sources.length > 0) {
-        addSectionTitle('Sources');
-
-        report.selected_sources.forEach((source, index) => {
-          addParagraph(`${index + 1}. ${source.title}`);
-          addParagraph(`URL : ${source.url}`, 4);
-          addParagraph(source.description, 4);
-          addParagraph(`Pourquoi cette source : ${source.reason_for_selection}`, 4);
-          addParagraph(`Score de confiance : ${Math.round(source.confidence_score * 100)} %`, 4);
-          cursorY += 1;
-        });
+      if (!pdfBlob) {
+        throw new Error('PDF vide');
       }
 
-      if (report.limitations.length > 0) {
-        addSectionTitle('Limites');
-        addBulletList(report.limitations);
-      }
-
-      if (report.trace.length > 0) {
-        addSectionTitle('Trace');
-        addBulletList(report.trace.map((step, index) => `${index + 1}. ${step}`));
-      }
-
-      const fileDate = new Intl.DateTimeFormat('fr-CA', {
-        year: 'numeric',
-        month: '2-digit',
-        day: '2-digit',
-      }).format(new Date()).replaceAll('/', '-');
-
-      pdf.save(`rapport-marianneai-${fileDate}.pdf`);
+      const objectUrl = window.URL.createObjectURL(pdfBlob);
+      const link = document.createElement('a');
+      link.href = objectUrl;
+      link.download = fileName;
+      link.click();
+      window.URL.revokeObjectURL(objectUrl);
+    } catch (error) {
+      console.error('Styled PDF generation failed', error);
+      this.pdfErrorMessage.set('Impossible de générer le PDF stylé pour le moment.');
     } finally {
       this.isDownloadingPdf.set(false);
     }
+  }
+
+  private extractFileName(contentDisposition: string | null): string {
+    if (!contentDisposition) {
+      return this.buildDefaultPdfFileName();
+    }
+
+    const match = /filename="([^"]+)"/i.exec(contentDisposition);
+    return match?.[1] ?? this.buildDefaultPdfFileName();
+  }
+
+  private buildDefaultPdfFileName(): string {
+    const fileDate = new Intl.DateTimeFormat('fr-CA', {
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+    }).format(new Date()).replaceAll('/', '-');
+
+    return `rapport-marianneai-style-${fileDate}.pdf`;
   }
 }

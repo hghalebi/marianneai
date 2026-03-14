@@ -6,13 +6,36 @@ import {
 } from '@angular/ssr/node';
 import express from 'express';
 import {join} from 'node:path';
+import {createStyledPdf} from './pdf/report-pdf';
+import {QueryResponse} from './app/report.types';
 
 const browserDistFolder = join(import.meta.dirname, '../browser');
+const logoPath = join(browserDistFolder, 'logo-mariene.png');
 
 const app = express();
 const angularApp = new AngularNodeAppEngine();
 
-app.use('/api', express.json());
+app.use('/api', express.json({limit: '1mb'}));
+
+app.post('/api/report/pdf', async (req, res) => {
+  const report = req.body as QueryResponse | undefined;
+
+  if (!report?.user_query || !report?.answer) {
+    res.status(400).json({error: 'Invalid report payload'});
+    return;
+  }
+
+  try {
+    const result = await createStyledPdf(report, logoPath);
+    res.setHeader('content-type', 'application/pdf');
+    res.setHeader('content-disposition', `attachment; filename="${result.fileName}"`);
+    res.setHeader('x-pdf-source', result.source);
+    res.status(200).send(result.pdfBuffer);
+  } catch (error) {
+    console.error('Styled PDF generation failed', error);
+    res.status(500).json({error: 'PDF generation failed'});
+  }
+});
 
 app.all('/api/{*proxyPath}', async (req, res) => {
   const backendUrl = process.env['BACKEND_URL'];

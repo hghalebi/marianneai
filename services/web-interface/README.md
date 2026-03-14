@@ -31,3 +31,4 @@ Owner: Michel
 - The front is exposed on `http://localhost:4000`
 - Set `BACKEND_URL` in your shell or a local `.env` file to connect the proxy to the open-data service
 - Override `GEMINI_API_KEY` in your shell or a local `.env` file before starting the stack if needed
+- The styled PDF export is generated server-side in LaTeX, with Gemini used when `GEMINI_API_KEY` is available
