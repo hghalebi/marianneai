@@ -1,0 +1,1014 @@
+﻿{
+    "user_query":  "Quels jeux de donn�es officiels existent sur les bornes de recharge �lectriques en France ?",
+    "selected_sources":  [
+                             {
+                                 "title":  "Bornes de recharge Lidl",
+                                 "url":  "https://www.data.gouv.fr/datasets/bornes-de-recharge-lidl-1",
+                                 "description":  "",
+                                 "reason_for_selection":  "This source provides useful complementary official context. Analytically prioritized because \u0027IRVE-Lidl-FR.csv\u0027 exposed a high-quality CSV resource.",
+                                 "confidence_score":  0.9
+                             },
+                             {
+                                 "title":  "Belib\u0027 - Points de recharge pour véhicules électriques - Disponibilité temps réel",
+                                 "url":  "https://www.data.gouv.fr/datasets/belib-points-de-recharge-pour-vehicules-electriques-disponibilite-temps-reel",
+                                 "description":  "",
+                                 "reason_for_selection":  "This is the closest official match to the user query: \u0027Quels jeux de donn�es officiels existent sur les bornes de recharge �lectriques en France ?\u0027. Analytically prioritized because \u0027belib-points-de-recharge-pour-vehicules-electriques-disponibilite-temps-reel.csv\u0027 exposed a high-quality CSV resource.",
+                                 "confidence_score":  0.95
+                             },
+                             {
+                                 "title":  "Bornes de Recharge pour Véhicules Électriques - IRVE",
+                                 "url":  "https://www.data.gouv.fr/datasets/bornes-de-recharge-pour-vehicules-electriques-irve",
+                                 "description":  "",
+                                 "reason_for_selection":  "This source provides useful complementary official context.",
+                                 "confidence_score":  0.85
+                             }
+                         ],
+    "answer":  "As a data analysis grounded in the selected data.gouv.fr resources, the strongest match for \u0027Quels jeux de donn�es officiels existent sur les bornes de recharge �lectriques en France ?\u0027 is \u0027Bornes de recharge Lidl\u0027. Bornes de recharge Lidl contains 20 sampled charging points from a live operational feed.",
+    "limitations":  [
+                        "This answer is grounded only in the selected sources and analyzed resources returned by the retrieval step.",
+                        "Some findings are based on resource samples and may need broader dataset inspection for exhaustive conclusions.",
+                        "No statistically meaningful linear regression was available from the detected numeric columns.",
+                        "No generic chart payload could be generated from the detected columns.",
+                        "No supported resource was found for dataset \u0027Bornes de Recharge pour Véhicules Électriques - IRVE\u0027."
+                    ],
+    "trace":  [
+                  "Started query processing.",
+                  "Agent 1 (Orchestrator) analyzing query...",
+                  "Orchestrator decided to search for: [\u0027bornes recharge véhicules électriques\u0027, \u0027IRVE France\u0027]",
+                  "Calling MCP data.gouv.fr tools...",
+                  "MCP returned 5 raw datasets.",
+                  "Agent 2 (Dataset Scout) filtering results...",
+                  "Scout selected 3 relevant sources.",
+                  "Retrieving dataset details and resources...",
+                  "Loaded details for 3 selected datasets.",
+                  "Reranking datasets after resource inspection...",
+                  "Reranked 3 selected sources using resource quality signals.",
+                  "Analyzing selected dataset resources...",
+                  "Analysis completed using 2 resource(s) with engine heuristic-local.",
+                  "Promoting analytically strongest datasets in final ranking...",
+                  "Promoted 3 source(s) using inspected resource scores.",
+                  "Agent 3 (Answer Synthesizer) generating final response...",
+                  "Synthesis complete.",
+                  "Generating PDF and XLSX reports...",
+                  "Generated 2 report artifact(s)."
+              ],
+    "analysis_engine":  "heuristic-local",
+    "analysis_summary":  "The backend analyzed 2 resource(s) to answer: \u0027Quels jeux de donn�es officiels existent sur les bornes de recharge �lectriques en France ?\u0027 using heuristic-local. Main analytical signal: Bornes de recharge Lidl contains 20 sampled charging points from a live operational feed.",
+    "key_findings":  [
+                         "Bornes de recharge Lidl contains 20 sampled charging points from a live operational feed.",
+                         "The full live resource exposes 5562 rows through the tabular API.",
+                         "The sample includes 20 distinct charging point identifiers.",
+                         "The sample spans locations such as rue Léonard de Vinci, 1545 Route de Saint-Gilles.",
+                         "The latest update visible in the analyzed sample is 2025-12-11.",
+                         "Bornes de recharge Lidl / IRVE-Lidl-FR.csv analyzed 5562 row(s).",
+                         "The numeric column \u0027puissance_nominale\u0027 has mean 58.4168, median 22.0, and range 22.0 to 360.0.",
+                         "3 frontend-ready chart payload(s) were generated for direct rendering."
+                     ],
+    "data_coverage":  "Bornes de recharge Lidl: 5562 row(s) analyzed, time coverage 2025-12-11 to 2025-12-11, 2 distinct values for cable_t2_attache | Belib\u0027 - Points de recharge pour véhicules électriques - Disponibilité temps réel: 2182 row(s) analyzed",
+    "dataset_row_count":  5562,
+    "dataset_columns":  [
+                            "accessibilite_pmr",
+                            "adresse_station",
+                            "cable_t2_attache",
+                            "code_insee_commune",
+                            "condition_acces",
+                            "contact_amenageur",
+                            "contact_operateur",
+                            "coordonneesXY",
+                            "date_maj",
+                            "date_mise_en_service",
+                            "gratuit",
+                            "horaires",
+                            "id_pdc_itinerance",
+                            "id_pdc_local",
+                            "id_station_itinerance",
+                            "id_station_local",
+                            "implantation_station",
+                            "nbre_pdc",
+                            "nom_enseigne",
+                            "nom_operateur",
+                            "nom_station",
+                            "num_pdl",
+                            "observations",
+                            "paiement_acte",
+                            "paiement_autre",
+                            "paiement_cb",
+                            "prise_type_2",
+                            "prise_type_autre",
+                            "prise_type_chademo",
+                            "prise_type_combo_ccs",
+                            "prise_type_ef",
+                            "puissance_nominale",
+                            "raccordement",
+                            "reservation",
+                            "restriction_gabarit",
+                            "siren_amenageur",
+                            "station_deux_roues",
+                            "tarification",
+                            "telephone_operateur",
+                            "﻿nom_amenageur"
+                        ],
+    "descriptive_statistics":  [
+                                   {
+                                       "column":  "puissance_nominale",
+                                       "non_null_count":  5562,
+                                       "mean":  58.4168,
+                                       "min":  22.0,
+                                       "max":  360.0,
+                                       "median":  22.0,
+                                       "stddev":  53.1283
+                                   },
+                                   {
+                                       "column":  "nbre_pdc",
+                                       "non_null_count":  5562,
+                                       "mean":  6.0014,
+                                       "min":  1.0,
+                                       "max":  26.0,
+                                       "median":  6.0,
+                                       "stddev":  3.1051
+                                   }
+                               ],
+    "regressions":  [
+
+                    ],
+    "charts":  [
+                   {
+                       "chart_id":  "time-series-date-maj-puissance-nominale",
+                       "title":  "puissance_nominale over time",
+                       "chart_type":  "line",
+                       "description":  "Average puissance_nominale grouped by date_maj.",
+                       "x_key":  "date",
+                       "y_keys":  [
+                                      "puissance_nominale"
+                                  ],
+                       "data":  [
+                                    {
+                                        "date":  "2025-12-11",
+                                        "puissance_nominale":  58.4168
+                                    }
+                                ]
+                   },
+                   {
+                       "chart_id":  "bar-cable-t2-attache-puissance-nominale",
+                       "title":  "puissance_nominale by cable_t2_attache",
+                       "chart_type":  "bar",
+                       "description":  "Aggregated puissance_nominale by cable_t2_attache.",
+                       "x_key":  "cable_t2_attache",
+                       "y_keys":  [
+                                      "puissance_nominale"
+                                  ],
+                       "data":  [
+                                    {
+                                        "cable_t2_attache":  "false",
+                                        "puissance_nominale":  323286.0
+                                    },
+                                    {
+                                        "cable_t2_attache":  "true",
+                                        "puissance_nominale":  1628.0
+                                    }
+                                ]
+                   },
+                   {
+                       "chart_id":  "scatter-puissance-nominale-nbre-pdc",
+                       "title":  "nbre_pdc vs puissance_nominale",
+                       "chart_type":  "scatter",
+                       "description":  "Scatter plot of nbre_pdc against puissance_nominale.",
+                       "x_key":  "puissance_nominale",
+                       "y_keys":  [
+                                      "nbre_pdc"
+                                  ],
+                       "data":  [
+                                    {
+                                        "puissance_nominale":  22.0,
+                                        "nbre_pdc":  7.0
+                                    },
+                                    {
+                                        "puissance_nominale":  50.0,
+                                        "nbre_pdc":  7.0
+                                    },
+                                    {
+                                        "puissance_nominale":  50.0,
+                                        "nbre_pdc":  7.0
+                                    },
+                                    {
+                                        "puissance_nominale":  180.0,
+                                        "nbre_pdc":  13.0
+                                    },
+                                    {
+                                        "puissance_nominale":  180.0,
+                                        "nbre_pdc":  13.0
+                                    },
+                                    {
+                                        "puissance_nominale":  180.0,
+                                        "nbre_pdc":  15.0
+                                    },
+                                    {
+                                        "puissance_nominale":  180.0,
+                                        "nbre_pdc":  15.0
+                                    },
+                                    {
+                                        "puissance_nominale":  180.0,
+                                        "nbre_pdc":  14.0
+                                    },
+                                    {
+                                        "puissance_nominale":  180.0,
+                                        "nbre_pdc":  14.0
+                                    },
+                                    {
+                                        "puissance_nominale":  180.0,
+                                        "nbre_pdc":  15.0
+                                    },
+                                    {
+                                        "puissance_nominale":  180.0,
+                                        "nbre_pdc":  15.0
+                                    },
+                                    {
+                                        "puissance_nominale":  180.0,
+                                        "nbre_pdc":  15.0
+                                    },
+                                    {
+                                        "puissance_nominale":  180.0,
+                                        "nbre_pdc":  15.0
+                                    },
+                                    {
+                                        "puissance_nominale":  180.0,
+                                        "nbre_pdc":  15.0
+                                    },
+                                    {
+                                        "puissance_nominale":  180.0,
+                                        "nbre_pdc":  15.0
+                                    },
+                                    {
+                                        "puissance_nominale":  22.0,
+                                        "nbre_pdc":  8.0
+                                    },
+                                    {
+                                        "puissance_nominale":  50.0,
+                                        "nbre_pdc":  8.0
+                                    },
+                                    {
+                                        "puissance_nominale":  50.0,
+                                        "nbre_pdc":  8.0
+                                    },
+                                    {
+                                        "puissance_nominale":  22.0,
+                                        "nbre_pdc":  8.0
+                                    },
+                                    {
+                                        "puissance_nominale":  50.0,
+                                        "nbre_pdc":  8.0
+                                    },
+                                    {
+                                        "puissance_nominale":  50.0,
+                                        "nbre_pdc":  8.0
+                                    },
+                                    {
+                                        "puissance_nominale":  22.0,
+                                        "nbre_pdc":  3.0
+                                    },
+                                    {
+                                        "puissance_nominale":  50.0,
+                                        "nbre_pdc":  3.0
+                                    },
+                                    {
+                                        "puissance_nominale":  50.0,
+                                        "nbre_pdc":  3.0
+                                    },
+                                    {
+                                        "puissance_nominale":  22.0,
+                                        "nbre_pdc":  7.0
+                                    },
+                                    {
+                                        "puissance_nominale":  50.0,
+                                        "nbre_pdc":  7.0
+                                    },
+                                    {
+                                        "puissance_nominale":  50.0,
+                                        "nbre_pdc":  7.0
+                                    },
+                                    {
+                                        "puissance_nominale":  22.0,
+                                        "nbre_pdc":  7.0
+                                    },
+                                    {
+                                        "puissance_nominale":  50.0,
+                                        "nbre_pdc":  7.0
+                                    },
+                                    {
+                                        "puissance_nominale":  50.0,
+                                        "nbre_pdc":  7.0
+                                    },
+                                    {
+                                        "puissance_nominale":  22.0,
+                                        "nbre_pdc":  10.0
+                                    },
+                                    {
+                                        "puissance_nominale":  50.0,
+                                        "nbre_pdc":  10.0
+                                    },
+                                    {
+                                        "puissance_nominale":  50.0,
+                                        "nbre_pdc":  10.0
+                                    },
+                                    {
+                                        "puissance_nominale":  22.0,
+                                        "nbre_pdc":  10.0
+                                    },
+                                    {
+                                        "puissance_nominale":  50.0,
+                                        "nbre_pdc":  10.0
+                                    },
+                                    {
+                                        "puissance_nominale":  50.0,
+                                        "nbre_pdc":  10.0
+                                    },
+                                    {
+                                        "puissance_nominale":  22.0,
+                                        "nbre_pdc":  9.0
+                                    },
+                                    {
+                                        "puissance_nominale":  50.0,
+                                        "nbre_pdc":  9.0
+                                    },
+                                    {
+                                        "puissance_nominale":  50.0,
+                                        "nbre_pdc":  9.0
+                                    },
+                                    {
+                                        "puissance_nominale":  22.0,
+                                        "nbre_pdc":  5.0
+                                    },
+                                    {
+                                        "puissance_nominale":  50.0,
+                                        "nbre_pdc":  5.0
+                                    },
+                                    {
+                                        "puissance_nominale":  50.0,
+                                        "nbre_pdc":  5.0
+                                    },
+                                    {
+                                        "puissance_nominale":  22.0,
+                                        "nbre_pdc":  3.0
+                                    },
+                                    {
+                                        "puissance_nominale":  50.0,
+                                        "nbre_pdc":  3.0
+                                    },
+                                    {
+                                        "puissance_nominale":  50.0,
+                                        "nbre_pdc":  3.0
+                                    },
+                                    {
+                                        "puissance_nominale":  22.0,
+                                        "nbre_pdc":  3.0
+                                    },
+                                    {
+                                        "puissance_nominale":  50.0,
+                                        "nbre_pdc":  3.0
+                                    },
+                                    {
+                                        "puissance_nominale":  50.0,
+                                        "nbre_pdc":  3.0
+                                    },
+                                    {
+                                        "puissance_nominale":  22.0,
+                                        "nbre_pdc":  6.0
+                                    },
+                                    {
+                                        "puissance_nominale":  50.0,
+                                        "nbre_pdc":  6.0
+                                    },
+                                    {
+                                        "puissance_nominale":  50.0,
+                                        "nbre_pdc":  6.0
+                                    },
+                                    {
+                                        "puissance_nominale":  22.0,
+                                        "nbre_pdc":  6.0
+                                    },
+                                    {
+                                        "puissance_nominale":  50.0,
+                                        "nbre_pdc":  6.0
+                                    },
+                                    {
+                                        "puissance_nominale":  50.0,
+                                        "nbre_pdc":  6.0
+                                    },
+                                    {
+                                        "puissance_nominale":  22.0,
+                                        "nbre_pdc":  5.0
+                                    },
+                                    {
+                                        "puissance_nominale":  50.0,
+                                        "nbre_pdc":  5.0
+                                    },
+                                    {
+                                        "puissance_nominale":  50.0,
+                                        "nbre_pdc":  5.0
+                                    },
+                                    {
+                                        "puissance_nominale":  22.0,
+                                        "nbre_pdc":  8.0
+                                    },
+                                    {
+                                        "puissance_nominale":  50.0,
+                                        "nbre_pdc":  8.0
+                                    },
+                                    {
+                                        "puissance_nominale":  50.0,
+                                        "nbre_pdc":  8.0
+                                    },
+                                    {
+                                        "puissance_nominale":  22.0,
+                                        "nbre_pdc":  8.0
+                                    },
+                                    {
+                                        "puissance_nominale":  50.0,
+                                        "nbre_pdc":  8.0
+                                    },
+                                    {
+                                        "puissance_nominale":  50.0,
+                                        "nbre_pdc":  8.0
+                                    },
+                                    {
+                                        "puissance_nominale":  22.0,
+                                        "nbre_pdc":  6.0
+                                    },
+                                    {
+                                        "puissance_nominale":  50.0,
+                                        "nbre_pdc":  6.0
+                                    },
+                                    {
+                                        "puissance_nominale":  50.0,
+                                        "nbre_pdc":  6.0
+                                    },
+                                    {
+                                        "puissance_nominale":  22.0,
+                                        "nbre_pdc":  6.0
+                                    },
+                                    {
+                                        "puissance_nominale":  50.0,
+                                        "nbre_pdc":  6.0
+                                    },
+                                    {
+                                        "puissance_nominale":  50.0,
+                                        "nbre_pdc":  6.0
+                                    },
+                                    {
+                                        "puissance_nominale":  22.0,
+                                        "nbre_pdc":  6.0
+                                    },
+                                    {
+                                        "puissance_nominale":  50.0,
+                                        "nbre_pdc":  6.0
+                                    },
+                                    {
+                                        "puissance_nominale":  50.0,
+                                        "nbre_pdc":  6.0
+                                    },
+                                    {
+                                        "puissance_nominale":  22.0,
+                                        "nbre_pdc":  6.0
+                                    },
+                                    {
+                                        "puissance_nominale":  50.0,
+                                        "nbre_pdc":  6.0
+                                    },
+                                    {
+                                        "puissance_nominale":  50.0,
+                                        "nbre_pdc":  6.0
+                                    },
+                                    {
+                                        "puissance_nominale":  22.0,
+                                        "nbre_pdc":  6.0
+                                    },
+                                    {
+                                        "puissance_nominale":  50.0,
+                                        "nbre_pdc":  6.0
+                                    },
+                                    {
+                                        "puissance_nominale":  50.0,
+                                        "nbre_pdc":  6.0
+                                    },
+                                    {
+                                        "puissance_nominale":  22.0,
+                                        "nbre_pdc":  6.0
+                                    },
+                                    {
+                                        "puissance_nominale":  50.0,
+                                        "nbre_pdc":  6.0
+                                    },
+                                    {
+                                        "puissance_nominale":  50.0,
+                                        "nbre_pdc":  6.0
+                                    },
+                                    {
+                                        "puissance_nominale":  22.0,
+                                        "nbre_pdc":  3.0
+                                    },
+                                    {
+                                        "puissance_nominale":  50.0,
+                                        "nbre_pdc":  3.0
+                                    },
+                                    {
+                                        "puissance_nominale":  50.0,
+                                        "nbre_pdc":  3.0
+                                    },
+                                    {
+                                        "puissance_nominale":  22.0,
+                                        "nbre_pdc":  7.0
+                                    },
+                                    {
+                                        "puissance_nominale":  50.0,
+                                        "nbre_pdc":  7.0
+                                    },
+                                    {
+                                        "puissance_nominale":  50.0,
+                                        "nbre_pdc":  7.0
+                                    },
+                                    {
+                                        "puissance_nominale":  22.0,
+                                        "nbre_pdc":  9.0
+                                    },
+                                    {
+                                        "puissance_nominale":  50.0,
+                                        "nbre_pdc":  9.0
+                                    },
+                                    {
+                                        "puissance_nominale":  50.0,
+                                        "nbre_pdc":  9.0
+                                    },
+                                    {
+                                        "puissance_nominale":  22.0,
+                                        "nbre_pdc":  8.0
+                                    },
+                                    {
+                                        "puissance_nominale":  50.0,
+                                        "nbre_pdc":  8.0
+                                    },
+                                    {
+                                        "puissance_nominale":  50.0,
+                                        "nbre_pdc":  8.0
+                                    },
+                                    {
+                                        "puissance_nominale":  22.0,
+                                        "nbre_pdc":  8.0
+                                    },
+                                    {
+                                        "puissance_nominale":  50.0,
+                                        "nbre_pdc":  8.0
+                                    },
+                                    {
+                                        "puissance_nominale":  50.0,
+                                        "nbre_pdc":  8.0
+                                    },
+                                    {
+                                        "puissance_nominale":  22.0,
+                                        "nbre_pdc":  7.0
+                                    },
+                                    {
+                                        "puissance_nominale":  50.0,
+                                        "nbre_pdc":  7.0
+                                    },
+                                    {
+                                        "puissance_nominale":  50.0,
+                                        "nbre_pdc":  7.0
+                                    },
+                                    {
+                                        "puissance_nominale":  22.0,
+                                        "nbre_pdc":  6.0
+                                    },
+                                    {
+                                        "puissance_nominale":  50.0,
+                                        "nbre_pdc":  6.0
+                                    },
+                                    {
+                                        "puissance_nominale":  50.0,
+                                        "nbre_pdc":  6.0
+                                    },
+                                    {
+                                        "puissance_nominale":  22.0,
+                                        "nbre_pdc":  6.0
+                                    },
+                                    {
+                                        "puissance_nominale":  50.0,
+                                        "nbre_pdc":  6.0
+                                    },
+                                    {
+                                        "puissance_nominale":  50.0,
+                                        "nbre_pdc":  6.0
+                                    },
+                                    {
+                                        "puissance_nominale":  22.0,
+                                        "nbre_pdc":  11.0
+                                    },
+                                    {
+                                        "puissance_nominale":  50.0,
+                                        "nbre_pdc":  11.0
+                                    },
+                                    {
+                                        "puissance_nominale":  50.0,
+                                        "nbre_pdc":  11.0
+                                    },
+                                    {
+                                        "puissance_nominale":  22.0,
+                                        "nbre_pdc":  5.0
+                                    },
+                                    {
+                                        "puissance_nominale":  50.0,
+                                        "nbre_pdc":  5.0
+                                    },
+                                    {
+                                        "puissance_nominale":  50.0,
+                                        "nbre_pdc":  5.0
+                                    },
+                                    {
+                                        "puissance_nominale":  22.0,
+                                        "nbre_pdc":  7.0
+                                    },
+                                    {
+                                        "puissance_nominale":  50.0,
+                                        "nbre_pdc":  7.0
+                                    },
+                                    {
+                                        "puissance_nominale":  50.0,
+                                        "nbre_pdc":  7.0
+                                    },
+                                    {
+                                        "puissance_nominale":  22.0,
+                                        "nbre_pdc":  7.0
+                                    },
+                                    {
+                                        "puissance_nominale":  50.0,
+                                        "nbre_pdc":  7.0
+                                    },
+                                    {
+                                        "puissance_nominale":  50.0,
+                                        "nbre_pdc":  7.0
+                                    },
+                                    {
+                                        "puissance_nominale":  22.0,
+                                        "nbre_pdc":  5.0
+                                    },
+                                    {
+                                        "puissance_nominale":  50.0,
+                                        "nbre_pdc":  5.0
+                                    },
+                                    {
+                                        "puissance_nominale":  50.0,
+                                        "nbre_pdc":  5.0
+                                    },
+                                    {
+                                        "puissance_nominale":  22.0,
+                                        "nbre_pdc":  3.0
+                                    },
+                                    {
+                                        "puissance_nominale":  50.0,
+                                        "nbre_pdc":  3.0
+                                    },
+                                    {
+                                        "puissance_nominale":  50.0,
+                                        "nbre_pdc":  3.0
+                                    },
+                                    {
+                                        "puissance_nominale":  22.0,
+                                        "nbre_pdc":  7.0
+                                    },
+                                    {
+                                        "puissance_nominale":  50.0,
+                                        "nbre_pdc":  7.0
+                                    },
+                                    {
+                                        "puissance_nominale":  50.0,
+                                        "nbre_pdc":  7.0
+                                    },
+                                    {
+                                        "puissance_nominale":  22.0,
+                                        "nbre_pdc":  5.0
+                                    },
+                                    {
+                                        "puissance_nominale":  50.0,
+                                        "nbre_pdc":  5.0
+                                    },
+                                    {
+                                        "puissance_nominale":  50.0,
+                                        "nbre_pdc":  5.0
+                                    },
+                                    {
+                                        "puissance_nominale":  22.0,
+                                        "nbre_pdc":  6.0
+                                    },
+                                    {
+                                        "puissance_nominale":  50.0,
+                                        "nbre_pdc":  6.0
+                                    },
+                                    {
+                                        "puissance_nominale":  50.0,
+                                        "nbre_pdc":  6.0
+                                    },
+                                    {
+                                        "puissance_nominale":  22.0,
+                                        "nbre_pdc":  6.0
+                                    },
+                                    {
+                                        "puissance_nominale":  50.0,
+                                        "nbre_pdc":  6.0
+                                    },
+                                    {
+                                        "puissance_nominale":  50.0,
+                                        "nbre_pdc":  6.0
+                                    },
+                                    {
+                                        "puissance_nominale":  22.0,
+                                        "nbre_pdc":  5.0
+                                    },
+                                    {
+                                        "puissance_nominale":  50.0,
+                                        "nbre_pdc":  5.0
+                                    },
+                                    {
+                                        "puissance_nominale":  50.0,
+                                        "nbre_pdc":  5.0
+                                    },
+                                    {
+                                        "puissance_nominale":  22.0,
+                                        "nbre_pdc":  7.0
+                                    },
+                                    {
+                                        "puissance_nominale":  50.0,
+                                        "nbre_pdc":  7.0
+                                    },
+                                    {
+                                        "puissance_nominale":  50.0,
+                                        "nbre_pdc":  7.0
+                                    },
+                                    {
+                                        "puissance_nominale":  22.0,
+                                        "nbre_pdc":  5.0
+                                    },
+                                    {
+                                        "puissance_nominale":  50.0,
+                                        "nbre_pdc":  5.0
+                                    },
+                                    {
+                                        "puissance_nominale":  50.0,
+                                        "nbre_pdc":  5.0
+                                    },
+                                    {
+                                        "puissance_nominale":  22.0,
+                                        "nbre_pdc":  5.0
+                                    },
+                                    {
+                                        "puissance_nominale":  50.0,
+                                        "nbre_pdc":  5.0
+                                    },
+                                    {
+                                        "puissance_nominale":  50.0,
+                                        "nbre_pdc":  5.0
+                                    },
+                                    {
+                                        "puissance_nominale":  22.0,
+                                        "nbre_pdc":  7.0
+                                    },
+                                    {
+                                        "puissance_nominale":  50.0,
+                                        "nbre_pdc":  7.0
+                                    },
+                                    {
+                                        "puissance_nominale":  50.0,
+                                        "nbre_pdc":  7.0
+                                    },
+                                    {
+                                        "puissance_nominale":  22.0,
+                                        "nbre_pdc":  10.0
+                                    },
+                                    {
+                                        "puissance_nominale":  50.0,
+                                        "nbre_pdc":  10.0
+                                    },
+                                    {
+                                        "puissance_nominale":  50.0,
+                                        "nbre_pdc":  10.0
+                                    },
+                                    {
+                                        "puissance_nominale":  22.0,
+                                        "nbre_pdc":  10.0
+                                    },
+                                    {
+                                        "puissance_nominale":  50.0,
+                                        "nbre_pdc":  10.0
+                                    },
+                                    {
+                                        "puissance_nominale":  50.0,
+                                        "nbre_pdc":  10.0
+                                    },
+                                    {
+                                        "puissance_nominale":  22.0,
+                                        "nbre_pdc":  6.0
+                                    },
+                                    {
+                                        "puissance_nominale":  50.0,
+                                        "nbre_pdc":  6.0
+                                    },
+                                    {
+                                        "puissance_nominale":  50.0,
+                                        "nbre_pdc":  6.0
+                                    },
+                                    {
+                                        "puissance_nominale":  22.0,
+                                        "nbre_pdc":  6.0
+                                    },
+                                    {
+                                        "puissance_nominale":  50.0,
+                                        "nbre_pdc":  6.0
+                                    },
+                                    {
+                                        "puissance_nominale":  50.0,
+                                        "nbre_pdc":  6.0
+                                    },
+                                    {
+                                        "puissance_nominale":  22.0,
+                                        "nbre_pdc":  6.0
+                                    },
+                                    {
+                                        "puissance_nominale":  50.0,
+                                        "nbre_pdc":  6.0
+                                    },
+                                    {
+                                        "puissance_nominale":  50.0,
+                                        "nbre_pdc":  6.0
+                                    },
+                                    {
+                                        "puissance_nominale":  22.0,
+                                        "nbre_pdc":  6.0
+                                    },
+                                    {
+                                        "puissance_nominale":  50.0,
+                                        "nbre_pdc":  6.0
+                                    },
+                                    {
+                                        "puissance_nominale":  50.0,
+                                        "nbre_pdc":  6.0
+                                    },
+                                    {
+                                        "puissance_nominale":  22.0,
+                                        "nbre_pdc":  5.0
+                                    },
+                                    {
+                                        "puissance_nominale":  50.0,
+                                        "nbre_pdc":  5.0
+                                    },
+                                    {
+                                        "puissance_nominale":  50.0,
+                                        "nbre_pdc":  5.0
+                                    },
+                                    {
+                                        "puissance_nominale":  22.0,
+                                        "nbre_pdc":  5.0
+                                    },
+                                    {
+                                        "puissance_nominale":  50.0,
+                                        "nbre_pdc":  5.0
+                                    },
+                                    {
+                                        "puissance_nominale":  50.0,
+                                        "nbre_pdc":  5.0
+                                    },
+                                    {
+                                        "puissance_nominale":  22.0,
+                                        "nbre_pdc":  5.0
+                                    },
+                                    {
+                                        "puissance_nominale":  50.0,
+                                        "nbre_pdc":  5.0
+                                    },
+                                    {
+                                        "puissance_nominale":  50.0,
+                                        "nbre_pdc":  5.0
+                                    },
+                                    {
+                                        "puissance_nominale":  22.0,
+                                        "nbre_pdc":  8.0
+                                    },
+                                    {
+                                        "puissance_nominale":  50.0,
+                                        "nbre_pdc":  8.0
+                                    },
+                                    {
+                                        "puissance_nominale":  50.0,
+                                        "nbre_pdc":  8.0
+                                    },
+                                    {
+                                        "puissance_nominale":  22.0,
+                                        "nbre_pdc":  8.0
+                                    },
+                                    {
+                                        "puissance_nominale":  50.0,
+                                        "nbre_pdc":  8.0
+                                    },
+                                    {
+                                        "puissance_nominale":  50.0,
+                                        "nbre_pdc":  8.0
+                                    },
+                                    {
+                                        "puissance_nominale":  22.0,
+                                        "nbre_pdc":  8.0
+                                    },
+                                    {
+                                        "puissance_nominale":  50.0,
+                                        "nbre_pdc":  8.0
+                                    },
+                                    {
+                                        "puissance_nominale":  50.0,
+                                        "nbre_pdc":  8.0
+                                    },
+                                    {
+                                        "puissance_nominale":  22.0,
+                                        "nbre_pdc":  8.0
+                                    },
+                                    {
+                                        "puissance_nominale":  50.0,
+                                        "nbre_pdc":  8.0
+                                    },
+                                    {
+                                        "puissance_nominale":  50.0,
+                                        "nbre_pdc":  8.0
+                                    },
+                                    {
+                                        "puissance_nominale":  22.0,
+                                        "nbre_pdc":  8.0
+                                    },
+                                    {
+                                        "puissance_nominale":  50.0,
+                                        "nbre_pdc":  8.0
+                                    },
+                                    {
+                                        "puissance_nominale":  50.0,
+                                        "nbre_pdc":  8.0
+                                    },
+                                    {
+                                        "puissance_nominale":  22.0,
+                                        "nbre_pdc":  8.0
+                                    },
+                                    {
+                                        "puissance_nominale":  50.0,
+                                        "nbre_pdc":  8.0
+                                    },
+                                    {
+                                        "puissance_nominale":  50.0,
+                                        "nbre_pdc":  8.0
+                                    },
+                                    {
+                                        "puissance_nominale":  22.0,
+                                        "nbre_pdc":  8.0
+                                    },
+                                    {
+                                        "puissance_nominale":  50.0,
+                                        "nbre_pdc":  8.0
+                                    },
+                                    {
+                                        "puissance_nominale":  50.0,
+                                        "nbre_pdc":  8.0
+                                    },
+                                    {
+                                        "puissance_nominale":  22.0,
+                                        "nbre_pdc":  8.0
+                                    },
+                                    {
+                                        "puissance_nominale":  50.0,
+                                        "nbre_pdc":  8.0
+                                    }
+                                ]
+                   }
+               ],
+    "used_resources":  [
+                           {
+                               "dataset_title":  "Bornes de recharge Lidl",
+                               "resource_title":  "IRVE-Lidl-FR.csv",
+                               "resource_url":  "https://static.data.gouv.fr/resources/bornes-de-recharge-lidl-1/20251217-093643/data.gouv-2025-12-11-lidlfr.csv",
+                               "format":  "csv"
+                           },
+                           {
+                               "dataset_title":  "Belib\u0027 - Points de recharge pour véhicules électriques - Disponibilité temps réel",
+                               "resource_title":  "belib-points-de-recharge-pour-vehicules-electriques-disponibilite-temps-reel.csv",
+                               "resource_url":  "https://opendata.paris.fr/api/explore/v2.1/catalog/datasets/belib-points-de-recharge-pour-vehicules-electriques-disponibilite-temps-reel/exports/csv?use_labels=true",
+                               "format":  "csv"
+                           }
+                       ],
+    "report_artifacts":  [
+                             {
+                                 "report_id":  "e3c80053e7c642bc969c0e6fb26d27f2",
+                                 "format":  "pdf",
+                                 "filename":  "analysis-report.pdf",
+                                 "download_url":  "/reports/e3c80053e7c642bc969c0e6fb26d27f2/analysis-report.pdf",
+                                 "content_type":  "application/pdf"
+                             },
+                             {
+                                 "report_id":  "e3c80053e7c642bc969c0e6fb26d27f2",
+                                 "format":  "xlsx",
+                                 "filename":  "analysis-report.xlsx",
+                                 "download_url":  "/reports/e3c80053e7c642bc969c0e6fb26d27f2/analysis-report.xlsx",
+                                 "content_type":  "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+                             }
+                         ]
+}

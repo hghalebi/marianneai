@@ -1,0 +1,109 @@
+%PDF-1.4
+1 0 obj << /Type /Catalog /Pages 2 0 R >> endobj
+2 0 obj << /Type /Pages /Kids [3 0 R] /Count 1 >> endobj
+3 0 obj << /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Contents 4 0 R /Resources << /Font << /F1 5 0 R >> >> >> endobj
+4 0 obj << /Length 3317 >> stream
+BT
+/F1 11 Tf
+50 790 Td
+14 TL
+(DataGouv Alive Expert Report) Tj
+T*
+() Tj
+T*
+(User query: Quels jeux de donn?es officiels existent sur les bornes de recharge ?lectriques en France ?) Tj
+T*
+() Tj
+T*
+(Analysis engine: heuristic-local) Tj
+T*
+() Tj
+T*
+(Executive answer: As a data analysis grounded in the selected data.gouv.fr resources, the strongest match for 'Quels jeux de donn?es officiels existent sur les bornes de recharge ?lectriques en France ?' is 'Bornes de recharge Lidl'. Bornes de recharge Lidl contains 20 sampled charging points from a live operational feed.) Tj
+T*
+() Tj
+T*
+(Analysis summary: The backend analyzed 2 resource\(s\) to answer: 'Quels jeux de donn?es officiels existent sur les bornes de recharge ?lectriques en France ?' using heuristic-local. Main analytical signal: Bornes de recharge Lidl contains 20 sampled charging points from a live operational feed.) Tj
+T*
+() Tj
+T*
+(Key findings:) Tj
+T*
+(- Bornes de recharge Lidl contains 20 sampled charging points from a live operational feed.) Tj
+T*
+(- The full live resource exposes 5562 rows through the tabular API.) Tj
+T*
+(- The sample includes 20 distinct charging point identifiers.) Tj
+T*
+(- The sample spans locations such as rue Léonard de Vinci, 1545 Route de Saint-Gilles.) Tj
+T*
+(- The latest update visible in the analyzed sample is 2025-12-11.) Tj
+T*
+(- Bornes de recharge Lidl / IRVE-Lidl-FR.csv analyzed 5562 row\(s\).) Tj
+T*
+(- The numeric column 'puissance_nominale' has mean 58.4168, median 22.0, and range 22.0 to 360.0.) Tj
+T*
+(- 3 frontend-ready chart payload\(s\) were generated for direct rendering.) Tj
+T*
+() Tj
+T*
+(Descriptive statistics:) Tj
+T*
+(- puissance_nominale: mean=58.4168, median=22.0, min=22.0, max=360.0) Tj
+T*
+(- nbre_pdc: mean=6.0014, median=6.0, min=1.0, max=26.0) Tj
+T*
+() Tj
+T*
+(Charts prepared for frontend:) Tj
+T*
+(- puissance_nominale over time \(line\)) Tj
+T*
+(- puissance_nominale by cable_t2_attache \(bar\)) Tj
+T*
+(- nbre_pdc vs puissance_nominale \(scatter\)) Tj
+T*
+() Tj
+T*
+(Selected sources:) Tj
+T*
+(- Bornes de recharge Lidl | https://www.data.gouv.fr/datasets/bornes-de-recharge-lidl-1) Tj
+T*
+(- Belib' - Points de recharge pour véhicules électriques - Disponibilité temps réel | https://www.data.gouv.fr/datasets/belib-points-de-recharge-pour-vehicules-electriques-disponibilite-temps-reel) Tj
+T*
+(- Bornes de Recharge pour Véhicules Électriques - IRVE | https://www.data.gouv.fr/datasets/bornes-de-recharge-pour-vehicules-electriques-irve) Tj
+T*
+() Tj
+T*
+(Data coverage:) Tj
+T*
+(Bornes de recharge Lidl: 5562 row\(s\) analyzed, time coverage 2025-12-11 to 2025-12-11, 2 distinct values for cable_t2_attache | Belib' - Points de recharge pour véhicules électriques - Disponibilité temps réel: 2182 row\(s\) analyzed) Tj
+T*
+() Tj
+T*
+(Limitations:) Tj
+T*
+(- This answer is grounded only in the selected sources and analyzed resources returned by the retrieval step.) Tj
+T*
+(- Some findings are based on resource samples and may need broader dataset inspection for exhaustive conclusions.) Tj
+T*
+(- No statistically meaningful linear regression was available from the detected numeric columns.) Tj
+T*
+(- No generic chart payload could be generated from the detected columns.) Tj
+T*
+(- No supported resource was found for dataset 'Bornes de Recharge pour Véhicules Électriques - IRVE'.) Tj
+ET
+endstream endobj
+5 0 obj << /Type /Font /Subtype /Type1 /BaseFont /Helvetica >> endobj
+xref
+0 6
+0000000000 65535 f 
+0000000009 00000 n 
+0000000058 00000 n 
+0000000115 00000 n 
+0000000241 00000 n 
+0000003610 00000 n 
+trailer << /Size 6 /Root 1 0 R >>
+startxref
+3680
+%%EOF

@@ -1,0 +1,11 @@
+HTTP/1.1 200 OK
+X-Powered-By: Express
+content-type: application/pdf
+content-disposition: attachment; filename="rapport-marianneai-style-2026-03-14.pdf"
+x-pdf-source: fallback
+Content-Length: 177505
+ETag: W/"2b561-0GV6fht6GHdg9utSNNfA7g27IFk"
+Date: Sat, 14 Mar 2026 15:10:24 GMT
+Connection: keep-alive
+Keep-Alive: timeout=5
+

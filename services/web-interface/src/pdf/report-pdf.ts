@@ -113,7 +113,7 @@ async function buildGeminiLatexFragment(report: QueryResponse): Promise<string> 
 function buildGeminiPrompt(report: QueryResponse): string {
   return [
     'Tu es un directeur artistique qui prépare un fragment LaTeX élégant pour un PDF MarianneAI.',
-    'Le backend ajoute déjà le logo logo-mariene.png dans l’entête et compile le document.',
+    'Le backend ajoute déjà le logo logo-mariene.png dans l’en-tête et compile le document.',
     'Tu dois seulement retourner un fragment LaTeX sans préambule ni ```.',
     'Couleurs de marque :',
     `- Bleu MarianneAI : ${BRAND_COLORS.blue}`,
@@ -291,15 +291,22 @@ function escapeLatex(value: string): string {
 }
 
 function normalizeText(value: string): string {
-  return value
+  const normalized = value
     .replace(/\r\n/g, '\n')
     .replace(/[’]/g, "'")
     .replace(/[“”]/g, '"')
     .replace(/[–—]/g, '-')
     .replace(/…/g, '...')
     .replace(/\u00A0/g, ' ')
-    .replace(/[•]/g, '-')
-    .replace(/[^\u0009\u000A\u000D\u0020-\u00FF]/g, '');
+    .replace(/[•]/g, '-');
+
+  return Array.from(normalized)
+    .filter((char) => {
+      const codePoint = char.codePointAt(0) ?? 0;
+
+      return codePoint === 0x09 || codePoint === 0x0a || codePoint === 0x0d || (codePoint >= 0x20 && codePoint <= 0xff);
+    })
+    .join('');
 }
 
 function buildPdfFileName(): string {
