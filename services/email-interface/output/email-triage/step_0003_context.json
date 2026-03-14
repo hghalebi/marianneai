@@ -1,0 +1,70 @@
+{
+  "context": {
+    "answer_endpoint": null,
+    "answer_endpoint_api_key": null,
+    "answer_endpoint_timeout_seconds": 30,
+    "conversation_history": [
+      "SYSTEM: supervisor delegated to mailbox_reader with instruction: Load up to 1 Gmail messages matching `subject:\"marianneai:\" newer_than:14d`.",
+      "MailboxReader: loaded 1 email(s) for query `subject:\"marianneai:\" newer_than:14d`",
+      "SYSTEM: mailbox_reader delegated to supervisor with instruction: Mailbox loaded.",
+      "SYSTEM: supervisor delegated to relevance_classifier with instruction: Classify whether the current email is relevant to MarianneAI.",
+      "SYSTEM: relevance_classifier failed: model completion failed: CompletionError: HttpError: Invalid status code 429 Too Many Requests with message: {\n  \"error\": {\n    \"code\": 429,\n    \"message\": \"You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_requests_per_model_per_day, limit: 250, model: gemini-3.1-pro\\nPlease retry in 8h41m45.421734069s.\",\n    \"status\": \"RESOURCE_EXHAUSTED\",\n    \"details\": [\n      {\n        \"@type\": \"type.googleapis.com/google.rpc.Help\",\n        \"links\": [\n          {\n            \"description\": \"Learn more about Gemini API quotas\",\n            \"url\": \"https://ai.google.dev/gemini-api/docs/rate-limits\"\n          }\n        ]\n      },\n      {\n        \"@type\": \"type.googleapis.com/google.rpc.QuotaFailure\",\n        \"violations\": [\n          {\n            \"quotaMetric\": \"generativelanguage.googleapis.com/generate_requests_per_model_per_day\",\n            \"quotaId\": \"GenerateRequestsPerDayPerProjectPerModel\",\n            \"quotaDimensions\": {\n              \"location\": \"global\",\n              \"model\": \"gemini-3.1-pro\"\n            },\n            \"quotaValue\": \"250\"\n          }\n        ]\n      },\n      {\n        \"@type\": \"type.googleapis.com/google.rpc.RetryInfo\",\n        \"retryDelay\": \"31305s\"\n      }\n    ]\n  }\n}\n"
+    ],
+    "current_classification": null,
+    "current_email_index": 0,
+    "current_intent": null,
+    "current_queue_record": null,
+    "current_response": null,
+    "current_validation": null,
+    "datagouv_mcp_endpoint": "http://127.0.0.1:8000/mcp",
+    "datagouv_mcp_timeout_seconds": 30,
+    "datagouv_mcp_tool": "search_datasets",
+    "datagouv_query_memory_cache": [],
+    "datagouv_query_memory_path": "./output/email-triage/datagouv-query-memory.md",
+    "emails": [
+      {
+        "date": "Sat, 14 Mar 2026 10:17:43 -0500",
+        "from": "ghalebi@gmail.com",
+        "html_body": null,
+        "label_ids": [
+          "UNREAD",
+          "SENT",
+          "INBOX"
+        ],
+        "message_id": "19cececbac3747ac",
+        "plain_text_body": "Hi there,\n\nThanks for reaching out about MarianneAI. Great timing ? we are currently making Datagouv MCP do a friendly obstacle course.\n\nDatagouv MCP returned an unusual response, so the automatic pipeline is taking a short coffee break.\nCurrent status: Datagouv MCP did not return a useful result.\n\nPlease try again in a few minutes, and we will respond properly.\n\nIf this is urgent, resend with subject [urgent] and we will keep the ticket open.\n\nKind regards,\nMarianneAI Support\n",
+        "snippet": "Hi there, Thanks for reaching out about MarianneAI. Great timing ? we are currently making Datagouv MCP do a friendly obstacle course. Datagouv MCP returned an unusual response, so the automatic",
+        "subject": "Re: marianneai: I want to ask Marriane AI about data about comapny in france",
+        "thread_id": "19cecc26154b1a27",
+        "to": "ghalebi@gmail.com"
+      }
+    ],
+    "mailbox_loaded": true,
+    "max_emails": 1,
+    "objective": "Read recent Gmail messages, find the ones related to MarianneAI, extract sender intent, and queue valid tasks to None.",
+    "project_profile": {
+      "about": "L’IA citoyenne pour comprendre les données publiques.",
+      "name": "MarianneAI",
+      "relevance_hints": [
+        "questions about French public data",
+        "feature requests for MarianneAI",
+        "bug reports or operational problems",
+        "partnership, pilot, or demo inquiries",
+        "requests to analyze or explain public datasets"
+      ],
+      "valid_task_criteria": [
+        "the sender intent is specific and actionable",
+        "there is enough detail to route work without guessing core requirements",
+        "the request relates to MarianneAI or its public-data mission",
+        "the email includes enough context to create a job queue item"
+      ],
+      "website": "https://marianneai.org/"
+    },
+    "query": "subject:\"marianneai:\" newer_than:14d",
+    "queue_backend": "none",
+    "reviewed_emails": [],
+    "step_count": 3
+  },
+  "current_agent": "relevance_classifier",
+  "timestamp": "2026-03-14T15:18:14.658030Z"
+}

@@ -1,0 +1,454 @@
+{
+  "objective": "Read recent Gmail messages, find the ones related to MarianneAI, extract sender intent, and queue valid tasks to None.",
+  "query": "marianneai:",
+  "queue_backend": "none",
+  "total_loaded": 5,
+  "related_count": 5,
+  "queueable_count": 4,
+  "persisted_count": 0,
+  "responded_count": 5,
+  "response_attempt_count": 5,
+  "reviewed_emails": [
+    {
+      "message": {
+        "message_id": "19cecce1120eb542",
+        "thread_id": "19cecc26154b1a27",
+        "from": "ghalebi@gmail.com",
+        "to": "ghalebi@gmail.com",
+        "subject": "Re: marianneai: I want to ask Marriane AI about data about comapny in france",
+        "date": "Sat, 14 Mar 2026 09:44:13 -0500",
+        "snippet": "No datasets found for query: &#39;Re: marianneai: I want to ask Marriane AI about data about comapny in france Hi there, Thanks for reaching out about MarianneAI. We appreciate your message. Our team",
+        "plain_text_body": "No datasets found for query: 'Re: marianneai: I want to ask Marriane AI about data about comapny in france Hi there, Thanks for reaching out about MarianneAI. We appreciate your message. Our team is currently handling many public-data requests, so the automatic answer service is temporarily busy. Your request is captured and will be handled manually. Current status: No ANSWER_ENDPOINT_URL configured. Sending temporary busy response. Please try again in a few minutes, and we will respond properly. If this | project:MarianneAI | from:ghalebi@gmail.com | category:bug_report | clarity:75 | outcome:Resolution of the system error preventing automated responses, and provision of the requested public data about French companies. | body:L?IA citoyenne pour comprendre les donn?es publiques.'\n",
+        "html_body": null,
+        "label_ids": [
+          "SENT",
+          "INBOX"
+        ]
+      },
+      "classification": {
+        "related_to_project": true,
+        "category": "bug_report",
+        "confidence": 0.95,
+        "public_data_relevance": true,
+        "reasoning": "The email contains an automated system error or bounce message ('No ANSWER_ENDPOINT_URL configured') triggered by a user's attempt to query public data about French companies. It highlights a critical operational issue with the MarianneAI automated response system."
+      },
+      "intent": {
+        "task_title": "Fix endpoint error and provide French company data",
+        "intent_summary": "The user reached out to MarianneAI to request public data about companies in France. The request triggered an internal system configuration error ('No ANSWER_ENDPOINT_URL configured') and sent a fallback message instead of the requested data.",
+        "requested_outcome": "Resolution of the system endpoint error and delivery of the requested public data regarding French companies.",
+        "task_description": "Investigate and resolve the 'No ANSWER_ENDPOINT_URL configured' error in the automated response system. Contact the user to clarify exactly what company data they are looking for (e.g., SIRENE dataset, specific company lookup) and provide the relevant public data.",
+        "requester_identity": "ghalebi@gmail.com",
+        "key_entities": [
+          "French companies",
+          "ANSWER_ENDPOINT_URL",
+          "Public data"
+        ],
+        "actionable": true,
+        "missing_information": [
+          "Specific company name(s)",
+          "Specific data points required (e.g., financials, registration, executive team)"
+        ]
+      },
+      "assessment": {
+        "should_queue": true,
+        "needs_human_review": true,
+        "clarity_score": 75,
+        "priority": "high",
+        "rationale": "The system captured a critical missing endpoint error when a user attempted to query French company data. This is highly actionable as a bug fix, though the user's initial data request is broad and requires follow-up.",
+        "missing_information": [
+          "Specific company name(s) or search criteria",
+          "Specific data points requested (e.g., financials, SIRENE data, executive team)"
+        ]
+      },
+      "queued_job": {
+        "backend": "none",
+        "status": "not_persisted",
+        "external_id": null,
+        "location": null,
+        "queued_at": "2026-03-14T14:47:41.227324Z",
+        "error": "QUEUE_BACKEND=none"
+      },
+      "response": {
+        "status": "sent",
+        "endpoint": "https://mcp.data.gouv.fr/mcp",
+        "attempted_at": "2026-03-14T14:47:43.311681Z",
+        "sent_message_id": "19cecd143ab7f391",
+        "sent_thread_id": "19cecc26154b1a27",
+        "recipient": "ghalebi@gmail.com",
+        "subject": "Re: marianneai: I want to ask Marriane AI about data about comapny in france",
+        "response_preview": "No datasets found for query: 'Recherche professionnelle de données publiques françaises | projet: marianneai | sujet: want ask marriane ai data comapny france | catégorie: bug_report | finalité: resolution system endpoint error delivery requested public data regarding french companies. | entités: french companies, answer_endpoint_url, public data | contexte métier: user reached out marianneai requ\n[truncated]",
+        "error": null
+      },
+      "disposition": "responded"
+    },
+    {
+      "message": {
+        "message_id": "19ceccd756ce6129",
+        "thread_id": "19cecc26154b1a27",
+        "from": "ghalebi@gmail.com",
+        "to": "ghalebi@gmail.com",
+        "subject": "Re: marianneai: I want to ask Marriane AI about data about comapny in france",
+        "date": "Sat, 14 Mar 2026 10:43:33 -0400",
+        "snippet": "Hi there, Thanks for reaching out about MarianneAI. We appreciate your message. Our team is currently handling many public-data requests, so the automatic answer service is temporarily busy. Your",
+        "plain_text_body": "Hi there,\n\nThanks for reaching out about MarianneAI. We appreciate your message.\n\nOur team is currently handling many public-data requests, so the automatic answer service is temporarily busy. Your request is captured and will be handled manually.\n\nCurrent status: No ANSWER_ENDPOINT_URL configured. Sending temporary busy response.\n\nPlease try again in a few minutes, and we will respond properly.\n\nIf this is urgent, resend with subject [urgent] and we will keep the ticket open.\n\nKind regards,\nMarianneAI Support\n",
+        "html_body": null,
+        "label_ids": [
+          "SENT",
+          "INBOX"
+        ]
+      },
+      "classification": {
+        "related_to_project": true,
+        "category": "bug_report",
+        "confidence": 0.9,
+        "public_data_relevance": true,
+        "reasoning": "The email appears to be an automated system error or bounce message ('No ANSWER_ENDPOINT_URL configured') triggered by a user's attempt to query MarianneAI about French company data, indicating an operational failure or bug in the auto-responder system."
+      },
+      "intent": {
+        "task_title": "Request for data about a company in France",
+        "intent_summary": "The user attempted to query MarianneAI for public data concerning a French company. The request was intercepted by an automated system error (missing ANSWER_ENDPOINT_URL), but the underlying intent remains gathering corporate public data.",
+        "requested_outcome": "To receive public data and information about a specific company or companies in France.",
+        "task_description": "Follow up with the user to apologize for the automated system failure and manually handle their request for French company data. Prompt the user to specify the exact company and the type of data they need.",
+        "requester_identity": "ghalebi@gmail.com",
+        "key_entities": [
+          "company in France",
+          "French public data"
+        ],
+        "actionable": true,
+        "missing_information": [
+          "Specific company name or SIREN/SIRET number",
+          "Specific data points required (e.g., registration details, financials, leadership)"
+        ]
+      },
+      "assessment": {
+        "should_queue": false,
+        "needs_human_review": true,
+        "clarity_score": 40,
+        "priority": "high",
+        "rationale": "The user is asking for data about a French company but failed to specify which company, making the core task impossible to execute without further clarification. Additionally, the email contains a system error ('No ANSWER_ENDPOINT_URL configured') indicating a bug that needs human attention.",
+        "missing_information": [
+          "Specific company name or SIREN/SIRET number",
+          "Specific data points required (e.g., financials, registration details)"
+        ]
+      },
+      "queued_job": null,
+      "response": {
+        "status": "sent",
+        "endpoint": "https://mcp.data.gouv.fr/mcp",
+        "attempted_at": "2026-03-14T14:48:18.915575Z",
+        "sent_message_id": "19cecd1cfd08287a",
+        "sent_thread_id": "19cecc26154b1a27",
+        "recipient": "ghalebi@gmail.com",
+        "subject": "Re: marianneai: I want to ask Marriane AI about data about comapny in france",
+        "response_preview": "No datasets found for query: 'Recherche professionnelle de données publiques françaises | projet: marianneai | sujet: want ask marriane ai data comapny france | catégorie: bug_report | finalité: receive public data information specific company companies france. | entités: company france, french public data | contexte métier: user attempted query marianneai public data concerning french company. re\n[truncated]",
+        "error": null
+      },
+      "disposition": "responded"
+    },
+    {
+      "message": {
+        "message_id": "19ceccbf42bb3f1f",
+        "thread_id": "19cecc26154b1a27",
+        "from": "ghalebi@gmail.com",
+        "to": "ghalebi@gmail.com",
+        "subject": "Re: marianneai: I want to ask Marriane AI about data about comapny in france",
+        "date": "Sat, 14 Mar 2026 10:41:55 -0400",
+        "snippet": "No datasets found for query: &#39;Re: marianneai: I want to ask Marriane AI about data about comapny in france Hi there, Thanks for reaching out about MarianneAI. We appreciate your message. Our team",
+        "plain_text_body": "No datasets found for query: 'Re: marianneai: I want to ask Marriane AI about data about comapny in france Hi there, Thanks for reaching out about MarianneAI. We appreciate your message. Our team is currently handling many public-data requests, so the automatic answer service is temporarily busy. Your request is captured and will be handled manually. Current status: datagouv mcp failed: Datagouv MCP call failed: https://mcp.data.gouv.fr/mcp - HTTP status client error (406 Not Acceptable) for url (https://mcp.data.gouv.fr/mcp) Please try | project:MarianneAI | from:ghalebi@gmail.com | category:bug_report | clarity:85 | outcome:Resolution of the system error so the user can successfully query and access public data about a company in France. | body:L?IA citoyenne pour comprendre les donn?es publiques.'\n",
+        "html_body": null,
+        "label_ids": [
+          "SENT",
+          "INBOX"
+        ]
+      },
+      "classification": {
+        "related_to_project": true,
+        "category": "bug_report",
+        "confidence": 0.98,
+        "public_data_relevance": true,
+        "reasoning": "The email contains an error log reporting a failure to retrieve French public company data due to a Datagouv MCP API error (HTTP 406 Not Acceptable). This clearly constitutes a bug report regarding MarianneAI's core functionality of querying public datasets."
+      },
+      "intent": {
+        "task_title": "Fix Datagouv MCP 406 Error on Company Data Query",
+        "intent_summary": "The user wants to find public data about a French company, but the system returned a Datagouv MCP API error (HTTP 406 Not Acceptable) when processing their request.",
+        "requested_outcome": "Resolution of the Datagouv MCP API error so the user can successfully query and access the requested public data about a company in France.",
+        "task_description": "Investigate the Datagouv MCP integration returning an 'HTTP 406 Not Acceptable' error. The error was triggered when the user attempted to query information about a company in France. Fix the API call parameters or headers to restore data retrieval functionality and allow the user's query to process.",
+        "requester_identity": "ghalebi@gmail.com",
+        "key_entities": [
+          "French company data",
+          "Datagouv MCP API",
+          "HTTP 406 Not Acceptable error"
+        ],
+        "actionable": true,
+        "missing_information": [
+          "The specific name or identifier (e.g., SIREN/SIRET) of the company the user is searching for"
+        ]
+      },
+      "assessment": {
+        "should_queue": true,
+        "needs_human_review": false,
+        "clarity_score": 85,
+        "priority": "normal",
+        "rationale": "The email provides a specific, actionable bug report regarding an HTTP 406 Not Acceptable error from the Datagouv MCP integration, which is sufficient to create a technical investigation ticket.",
+        "missing_information": [
+          "Specific company name or SIREN/SIRET used in the failing query"
+        ]
+      },
+      "queued_job": {
+        "backend": "none",
+        "status": "not_persisted",
+        "external_id": null,
+        "location": null,
+        "queued_at": "2026-03-14T14:48:47.316485Z",
+        "error": "QUEUE_BACKEND=none"
+      },
+      "response": {
+        "status": "sent",
+        "endpoint": "https://mcp.data.gouv.fr/mcp",
+        "attempted_at": "2026-03-14T14:48:48.942008Z",
+        "sent_message_id": "19cecd24303fc1b1",
+        "sent_thread_id": "19cecc26154b1a27",
+        "recipient": "ghalebi@gmail.com",
+        "subject": "Re: marianneai: I want to ask Marriane AI about data about comapny in france",
+        "response_preview": "No datasets found for query: 'Recherche professionnelle de données publiques françaises | projet: marianneai | sujet: want ask marriane ai data comapny france | catégorie: bug_report | finalité: resolution datagouv mcp api error so user can successfully query access requested public data company france. | entités: french company data, datagouv mcp api, http 406 not acceptable error | contexte méti\n[truncated]",
+        "error": null
+      },
+      "disposition": "responded"
+    },
+    {
+      "message": {
+        "message_id": "19ceccad827f059b",
+        "thread_id": "19cecc26154b1a27",
+        "from": "ghalebi@gmail.com",
+        "to": "ghalebi@gmail.com",
+        "subject": "Re: marianneai: I want to ask Marriane AI about data about comapny in france",
+        "date": "Sat, 14 Mar 2026 09:40:42 -0500",
+        "snippet": "Hi there, Thanks for reaching out about MarianneAI. We appreciate your message. Our team is currently handling many public-data requests, so the automatic answer service is temporarily busy. Your",
+        "plain_text_body": "Hi there,\n\nThanks for reaching out about MarianneAI. We appreciate your message.\n\nOur team is currently handling many public-data requests, so the automatic answer service is temporarily busy. Your request is captured and will be handled manually.\n\nCurrent status: datagouv mcp failed: Datagouv MCP call failed: https://mcp.data.gouv.fr/mcp - HTTP status client error (406 Not Acceptable) for url (https://mcp.data.gouv.fr/mcp)\n\nPlease try again in a few minutes, and we will respond properly.\n\nIf this is urgent, resend with subject [urgent] and we will keep the ticket open.\n\nKind regards,\nMarianneAI Support\n",
+        "html_body": null,
+        "label_ids": [
+          "SENT",
+          "INBOX"
+        ]
+      },
+      "classification": {
+        "related_to_project": true,
+        "category": "bug_report",
+        "confidence": 0.95,
+        "public_data_relevance": true,
+        "reasoning": "The email contains an error trace regarding a failed connection to the data.gouv.fr MCP (406 Not Acceptable) after a user attempted to query data about companies in France."
+      },
+      "intent": {
+        "task_title": "Fix MCP 406 Error / French Company Data Request",
+        "intent_summary": "The user attempted to query MarianneAI for public data regarding companies in France, but the request failed due to an HTTP 406 Not Acceptable error from the data.gouv.fr MCP integration.",
+        "requested_outcome": "Resolution of the MCP connection error so the user can successfully receive the requested public data about French companies.",
+        "task_description": "Investigate and resolve the '406 Not Acceptable' HTTP client error occurring when connecting to the data.gouv.fr MCP (https://mcp.data.gouv.fr/mcp). Once the integration is fixed, process the user's original query for French company data.",
+        "requester_identity": "ghalebi@gmail.com",
+        "key_entities": [
+          "data.gouv.fr",
+          "MCP",
+          "company data",
+          "France",
+          "HTTP 406 Not Acceptable"
+        ],
+        "actionable": true,
+        "missing_information": [
+          "Specific company name(s) or SIREN/SIRET numbers",
+          "Exact data points requested (e.g., financial records, registration status, sector)"
+        ]
+      },
+      "assessment": {
+        "should_queue": true,
+        "needs_human_review": false,
+        "clarity_score": 90,
+        "priority": "high",
+        "rationale": "The email provides a specific, actionable bug report detailing an HTTP 406 Not Acceptable error when connecting to the core data.gouv.fr MCP integration, which blocks public data queries.",
+        "missing_information": [
+          "Specific company name(s) or SIREN/SIRET numbers for the original query",
+          "Exact data points requested about the companies"
+        ]
+      },
+      "queued_job": {
+        "backend": "none",
+        "status": "not_persisted",
+        "external_id": null,
+        "location": null,
+        "queued_at": "2026-03-14T14:49:19.554608Z",
+        "error": "QUEUE_BACKEND=none"
+      },
+      "response": {
+        "status": "sent",
+        "endpoint": "https://mcp.data.gouv.fr/mcp",
+        "attempted_at": "2026-03-14T14:49:21.309953Z",
+        "sent_message_id": "19cecd2c0bc12767",
+        "sent_thread_id": "19cecc26154b1a27",
+        "recipient": "ghalebi@gmail.com",
+        "subject": "Re: marianneai: I want to ask Marriane AI about data about comapny in france",
+        "response_preview": "No datasets found for query: 'Recherche professionnelle de données publiques françaises | projet: marianneai | sujet: want ask marriane ai data comapny france | catégorie: bug_report | finalité: resolution mcp connection error so user can successfully receive requested public data french companies. | entités: data.gouv.fr, mcp, company data, france, http 406 not acceptable | contexte métier: user \n[truncated]",
+        "error": null
+      },
+      "disposition": "responded"
+    },
+    {
+      "message": {
+        "message_id": "19cecca4b906ff64",
+        "thread_id": "19cecc26154b1a27",
+        "from": "ghalebi@gmail.com",
+        "to": "ghalebi@gmail.com",
+        "subject": "Re: marianneai: I want to ask Marriane AI about data about comapny in france",
+        "date": "Sat, 14 Mar 2026 07:40:06 -0700",
+        "snippet": "Hi there, Thanks for reaching out about MarianneAI. We appreciate your message. Our team is currently handling many public-data requests, so the automatic answer service is temporarily busy. Your",
+        "plain_text_body": "Hi there,\n\nThanks for reaching out about MarianneAI. We appreciate your message.\n\nOur team is currently handling many public-data requests, so the automatic answer service is temporarily busy. Your request is captured and will be handled manually.\n\nCurrent status: datagouv mcp failed: Datagouv MCP call failed: https://mcp.data.gouv.fr/mcp - HTTP status client error (406 Not Acceptable) for url (https://mcp.data.gouv.fr/mcp)\n\nPlease try again in a few minutes, and we will respond properly.\n\nIf this is urgent, resend with subject [urgent] and we will keep the ticket open.\n\nKind regards,\nMarianneAI Support\n",
+        "html_body": null,
+        "label_ids": [
+          "SENT",
+          "INBOX"
+        ]
+      },
+      "classification": {
+        "related_to_project": true,
+        "category": "bug_report",
+        "confidence": 0.95,
+        "public_data_relevance": true,
+        "reasoning": "The email contains an error traceback (HTTP 406 Not Acceptable) indicating a failure with the datagouv MCP integration when querying French company data."
+      },
+      "intent": {
+        "task_title": "Fix HTTP 406 datagouv MCP error for company data query",
+        "intent_summary": "The user wants to retrieve data about a company in France, but their request triggered an HTTP 406 Not Acceptable error from the datagouv MCP integration.",
+        "requested_outcome": "The 406 error is resolved so the user can successfully query and receive public data about French companies.",
+        "task_description": "Investigate and resolve the 'HTTP 406 Not Acceptable' error occurring at the datagouv MCP endpoint (https://mcp.data.gouv.fr/mcp). The bug was triggered by a user querying for French company data. Check the request formatting, specifically the 'Accept' headers and payload compatibility with the data.gouv.fr API.",
+        "requester_identity": "ghalebi@gmail.com",
+        "key_entities": [
+          "datagouv MCP",
+          "https://mcp.data.gouv.fr/mcp",
+          "HTTP 406 Not Acceptable",
+          "French company data"
+        ],
+        "actionable": true,
+        "missing_information": [
+          "The specific company name or SIREN/SIRET the user was searching for",
+          "The exact request payload and headers sent to the MCP endpoint that triggered the 406 error"
+        ]
+      },
+      "assessment": {
+        "should_queue": true,
+        "needs_human_review": false,
+        "clarity_score": 85,
+        "priority": "high",
+        "rationale": "The email reports a specific and actionable bug (HTTP 406 Not Acceptable error) occurring at a known endpoint (datagouv MCP) during a core use case (querying French company data). It provides sufficient context to queue a developer task to investigate API request headers and payload compatibility.",
+        "missing_information": [
+          "The specific company name or SIREN/SIRET the user was searching for",
+          "The exact request payload and headers sent to the MCP endpoint"
+        ]
+      },
+      "queued_job": {
+        "backend": "none",
+        "status": "not_persisted",
+        "external_id": null,
+        "location": null,
+        "queued_at": "2026-03-14T14:49:52.512444Z",
+        "error": "QUEUE_BACKEND=none"
+      },
+      "response": {
+        "status": "sent",
+        "endpoint": "https://mcp.data.gouv.fr/mcp",
+        "attempted_at": "2026-03-14T14:50:03.142333Z",
+        "sent_message_id": "19cecd36583f46b7",
+        "sent_thread_id": "19cecc26154b1a27",
+        "recipient": "ghalebi@gmail.com",
+        "subject": "Re: marianneai: I want to ask Marriane AI about data about comapny in france",
+        "response_preview": "No datasets found for query: 'Recherche professionnelle de données publiques françaises | projet: marianneai | sujet: want ask marriane ai data comapny france | catégorie: bug_report | finalité: 406 error is resolved so user can successfully query receive public data french companies. | entités: datagouv mcp, https://mcp.data.gouv.fr/mcp, http 406 not acceptable, french company data | contexte mét\n[truncated]",
+        "error": null
+      },
+      "disposition": "responded"
+    }
+  ],
+  "conversation_history": [
+    "SYSTEM: supervisor delegated to mailbox_reader with instruction: Load up to 5 Gmail messages matching `marianneai:`.",
+    "MailboxReader: loaded 5 email(s) for query `marianneai:`",
+    "SYSTEM: mailbox_reader delegated to supervisor with instruction: Mailbox loaded.",
+    "SYSTEM: supervisor delegated to relevance_classifier with instruction: Classify whether the current email is relevant to MarianneAI.",
+    "RelevanceClassifier: evaluating email from Some(\"ghalebi@gmail.com\") subject=Some(\"Re: marianneai: I want to ask Marriane AI about data about comapny in france\")",
+    "RelevanceClassifier: related=true category=bug_report confidence=0.95",
+    "SYSTEM: relevance_classifier delegated to supervisor with instruction: Relevance classification complete.",
+    "SYSTEM: supervisor delegated to intent_extractor with instruction: Extract the sender intent from the current MarianneAI email.",
+    "IntentExtractor: message=Some(\"Re: marianneai: I want to ask Marriane AI about data about comapny in france\") extraction_started",
+    "IntentExtractor: title=Fix endpoint error and provide French company data actionable=true",
+    "SYSTEM: intent_extractor delegated to supervisor with instruction: Intent extraction complete.",
+    "SYSTEM: supervisor delegated to task_validator with instruction: Decide whether the extracted intent is clear enough to become a queued task.",
+    "TaskValidator: evaluating message=Some(\"Re: marianneai: I want to ask Marriane AI about data about comapny in france\") for clarity and actionability",
+    "TaskValidator: should_queue=true clarity_score=75",
+    "SYSTEM: task_validator delegated to supervisor with instruction: Task validation complete.",
+    "SYSTEM: supervisor delegated to queue_writer with instruction: Persist the validated task to the None queue backend.",
+    "QueueWriter: backend=None status=not_persisted",
+    "SYSTEM: queue_writer delegated to supervisor with instruction: Queue persistence complete.",
+    "SYSTEM: supervisor delegated to datagouv_responder with instruction: Prepare an answer for this related email using Datagouv MCP data tools.",
+    "SYSTEM: datagouv_responder delegated to supervisor with instruction: Datagouv response attempt complete.",
+    "SYSTEM: supervisor delegated to relevance_classifier with instruction: Classify whether the current email is relevant to MarianneAI.",
+    "RelevanceClassifier: evaluating email from Some(\"ghalebi@gmail.com\") subject=Some(\"Re: marianneai: I want to ask Marriane AI about data about comapny in france\")",
+    "RelevanceClassifier: related=true category=bug_report confidence=0.90",
+    "SYSTEM: relevance_classifier delegated to supervisor with instruction: Relevance classification complete.",
+    "SYSTEM: supervisor delegated to intent_extractor with instruction: Extract the sender intent from the current MarianneAI email.",
+    "IntentExtractor: message=Some(\"Re: marianneai: I want to ask Marriane AI about data about comapny in france\") extraction_started",
+    "IntentExtractor: title=Request for data about a company in France actionable=true",
+    "SYSTEM: intent_extractor delegated to supervisor with instruction: Intent extraction complete.",
+    "SYSTEM: supervisor delegated to task_validator with instruction: Decide whether the extracted intent is clear enough to become a queued task.",
+    "TaskValidator: evaluating message=Some(\"Re: marianneai: I want to ask Marriane AI about data about comapny in france\") for clarity and actionability",
+    "TaskValidator: should_queue=false clarity_score=40",
+    "SYSTEM: task_validator delegated to supervisor with instruction: Task validation complete.",
+    "SYSTEM: supervisor delegated to datagouv_responder with instruction: Prepare an answer for this related email using Datagouv MCP data tools.",
+    "SYSTEM: datagouv_responder delegated to supervisor with instruction: Datagouv response attempt complete.",
+    "SYSTEM: supervisor delegated to relevance_classifier with instruction: Classify whether the current email is relevant to MarianneAI.",
+    "RelevanceClassifier: evaluating email from Some(\"ghalebi@gmail.com\") subject=Some(\"Re: marianneai: I want to ask Marriane AI about data about comapny in france\")",
+    "RelevanceClassifier: related=true category=bug_report confidence=0.98",
+    "SYSTEM: relevance_classifier delegated to supervisor with instruction: Relevance classification complete.",
+    "SYSTEM: supervisor delegated to intent_extractor with instruction: Extract the sender intent from the current MarianneAI email.",
+    "IntentExtractor: message=Some(\"Re: marianneai: I want to ask Marriane AI about data about comapny in france\") extraction_started",
+    "IntentExtractor: title=Fix Datagouv MCP 406 Error on Company Data Query actionable=true",
+    "SYSTEM: intent_extractor delegated to supervisor with instruction: Intent extraction complete.",
+    "SYSTEM: supervisor delegated to task_validator with instruction: Decide whether the extracted intent is clear enough to become a queued task.",
+    "TaskValidator: evaluating message=Some(\"Re: marianneai: I want to ask Marriane AI about data about comapny in france\") for clarity and actionability",
+    "TaskValidator: should_queue=true clarity_score=85",
+    "SYSTEM: task_validator delegated to supervisor with instruction: Task validation complete.",
+    "SYSTEM: supervisor delegated to queue_writer with instruction: Persist the validated task to the None queue backend.",
+    "QueueWriter: backend=None status=not_persisted",
+    "SYSTEM: queue_writer delegated to supervisor with instruction: Queue persistence complete.",
+    "SYSTEM: supervisor delegated to datagouv_responder with instruction: Prepare an answer for this related email using Datagouv MCP data tools.",
+    "SYSTEM: datagouv_responder delegated to supervisor with instruction: Datagouv response attempt complete.",
+    "SYSTEM: supervisor delegated to relevance_classifier with instruction: Classify whether the current email is relevant to MarianneAI.",
+    "RelevanceClassifier: evaluating email from Some(\"ghalebi@gmail.com\") subject=Some(\"Re: marianneai: I want to ask Marriane AI about data about comapny in france\")",
+    "RelevanceClassifier: related=true category=bug_report confidence=0.95",
+    "SYSTEM: relevance_classifier delegated to supervisor with instruction: Relevance classification complete.",
+    "SYSTEM: supervisor delegated to intent_extractor with instruction: Extract the sender intent from the current MarianneAI email.",
+    "IntentExtractor: message=Some(\"Re: marianneai: I want to ask Marriane AI about data about comapny in france\") extraction_started",
+    "IntentExtractor: title=Fix MCP 406 Error / French Company Data Request actionable=true",
+    "SYSTEM: intent_extractor delegated to supervisor with instruction: Intent extraction complete.",
+    "SYSTEM: supervisor delegated to task_validator with instruction: Decide whether the extracted intent is clear enough to become a queued task.",
+    "TaskValidator: evaluating message=Some(\"Re: marianneai: I want to ask Marriane AI about data about comapny in france\") for clarity and actionability",
+    "TaskValidator: should_queue=true clarity_score=90",
+    "SYSTEM: task_validator delegated to supervisor with instruction: Task validation complete.",
+    "SYSTEM: supervisor delegated to queue_writer with instruction: Persist the validated task to the None queue backend.",
+    "QueueWriter: backend=None status=not_persisted",
+    "SYSTEM: queue_writer delegated to supervisor with instruction: Queue persistence complete.",
+    "SYSTEM: supervisor delegated to datagouv_responder with instruction: Prepare an answer for this related email using Datagouv MCP data tools.",
+    "SYSTEM: datagouv_responder delegated to supervisor with instruction: Datagouv response attempt complete.",
+    "SYSTEM: supervisor delegated to relevance_classifier with instruction: Classify whether the current email is relevant to MarianneAI.",
+    "RelevanceClassifier: evaluating email from Some(\"ghalebi@gmail.com\") subject=Some(\"Re: marianneai: I want to ask Marriane AI about data about comapny in france\")",
+    "RelevanceClassifier: related=true category=bug_report confidence=0.95",
+    "SYSTEM: relevance_classifier delegated to supervisor with instruction: Relevance classification complete.",
+    "SYSTEM: supervisor delegated to intent_extractor with instruction: Extract the sender intent from the current MarianneAI email.",
+    "IntentExtractor: message=Some(\"Re: marianneai: I want to ask Marriane AI about data about comapny in france\") extraction_started",
+    "IntentExtractor: title=Fix HTTP 406 datagouv MCP error for company data query actionable=true",
+    "SYSTEM: intent_extractor delegated to supervisor with instruction: Intent extraction complete.",
+    "SYSTEM: supervisor delegated to task_validator with instruction: Decide whether the extracted intent is clear enough to become a queued task.",
+    "TaskValidator: evaluating message=Some(\"Re: marianneai: I want to ask Marriane AI about data about comapny in france\") for clarity and actionability",
+    "TaskValidator: should_queue=true clarity_score=85",
+    "SYSTEM: task_validator delegated to supervisor with instruction: Task validation complete.",
+    "SYSTEM: supervisor delegated to queue_writer with instruction: Persist the validated task to the None queue backend.",
+    "QueueWriter: backend=None status=not_persisted",
+    "SYSTEM: queue_writer delegated to supervisor with instruction: Queue persistence complete.",
+    "SYSTEM: supervisor delegated to datagouv_responder with instruction: Prepare an answer for this related email using Datagouv MCP data tools.",
+    "SYSTEM: datagouv_responder delegated to supervisor with instruction: Datagouv response attempt complete.",
+    "SYSTEM: supervisor delegated to auditor with instruction: All available emails have been processed."
+  ]
+}

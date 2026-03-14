@@ -1,0 +1,16 @@
+{
+  "objective": "Read recent Gmail messages, find the ones related to MarianneAI, extract sender intent, and queue valid tasks to None.",
+  "query": "subject:MarianneAI",
+  "queue_backend": "none",
+  "total_loaded": 0,
+  "related_count": 0,
+  "queueable_count": 0,
+  "persisted_count": 0,
+  "reviewed_emails": [],
+  "conversation_history": [
+    "SYSTEM: supervisor delegated to mailbox_reader with instruction: Load up to 1 Gmail messages matching `subject:MarianneAI`.",
+    "MailboxReader: loaded 0 email(s) for query `subject:MarianneAI`",
+    "SYSTEM: mailbox_reader delegated to supervisor with instruction: Mailbox loaded.",
+    "SYSTEM: supervisor delegated to auditor with instruction: All available emails have been processed."
+  ]
+}

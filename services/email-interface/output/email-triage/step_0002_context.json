@@ -1,0 +1,68 @@
+{
+  "context": {
+    "answer_endpoint": null,
+    "answer_endpoint_api_key": null,
+    "answer_endpoint_timeout_seconds": 30,
+    "conversation_history": [
+      "SYSTEM: supervisor delegated to mailbox_reader with instruction: Load up to 1 Gmail messages matching `subject:\"marianneai:\" newer_than:14d`.",
+      "MailboxReader: loaded 1 email(s) for query `subject:\"marianneai:\" newer_than:14d`",
+      "SYSTEM: mailbox_reader delegated to supervisor with instruction: Mailbox loaded."
+    ],
+    "current_classification": null,
+    "current_email_index": 0,
+    "current_intent": null,
+    "current_queue_record": null,
+    "current_response": null,
+    "current_validation": null,
+    "datagouv_mcp_endpoint": "http://127.0.0.1:8000/mcp",
+    "datagouv_mcp_timeout_seconds": 30,
+    "datagouv_mcp_tool": "search_datasets",
+    "datagouv_query_memory_cache": [],
+    "datagouv_query_memory_path": "./output/email-triage/datagouv-query-memory.md",
+    "emails": [
+      {
+        "date": "Sat, 14 Mar 2026 10:17:43 -0500",
+        "from": "ghalebi@gmail.com",
+        "html_body": null,
+        "label_ids": [
+          "UNREAD",
+          "SENT",
+          "INBOX"
+        ],
+        "message_id": "19cececbac3747ac",
+        "plain_text_body": "Hi there,\n\nThanks for reaching out about MarianneAI. Great timing ? we are currently making Datagouv MCP do a friendly obstacle course.\n\nDatagouv MCP returned an unusual response, so the automatic pipeline is taking a short coffee break.\nCurrent status: Datagouv MCP did not return a useful result.\n\nPlease try again in a few minutes, and we will respond properly.\n\nIf this is urgent, resend with subject [urgent] and we will keep the ticket open.\n\nKind regards,\nMarianneAI Support\n",
+        "snippet": "Hi there, Thanks for reaching out about MarianneAI. Great timing ? we are currently making Datagouv MCP do a friendly obstacle course. Datagouv MCP returned an unusual response, so the automatic",
+        "subject": "Re: marianneai: I want to ask Marriane AI about data about comapny in france",
+        "thread_id": "19cecc26154b1a27",
+        "to": "ghalebi@gmail.com"
+      }
+    ],
+    "mailbox_loaded": true,
+    "max_emails": 1,
+    "objective": "Read recent Gmail messages, find the ones related to MarianneAI, extract sender intent, and queue valid tasks to None.",
+    "project_profile": {
+      "about": "L’IA citoyenne pour comprendre les données publiques.",
+      "name": "MarianneAI",
+      "relevance_hints": [
+        "questions about French public data",
+        "feature requests for MarianneAI",
+        "bug reports or operational problems",
+        "partnership, pilot, or demo inquiries",
+        "requests to analyze or explain public datasets"
+      ],
+      "valid_task_criteria": [
+        "the sender intent is specific and actionable",
+        "there is enough detail to route work without guessing core requirements",
+        "the request relates to MarianneAI or its public-data mission",
+        "the email includes enough context to create a job queue item"
+      ],
+      "website": "https://marianneai.org/"
+    },
+    "query": "subject:\"marianneai:\" newer_than:14d",
+    "queue_backend": "none",
+    "reviewed_emails": [],
+    "step_count": 2
+  },
+  "current_agent": "supervisor",
+  "timestamp": "2026-03-14T15:18:14.465780Z"
+}

@@ -1,0 +1,4 @@
+[2026-03-14T14:02:19Z] Starting loop with interval=2s query=newer_than:7d max_emails=1 queue_backend=none
+[2026-03-14T14:02:19Z] Starting email interface run
+[1m[92m    Finished[0m `dev` profile [unoptimized + debuginfo] target(s) in 0.13s
+[1m[92m     Running[0m `target/debug/email-interface --query 'newer_than:7d' --max-emails 1 --output-dir ./output/email-triage --queue-backend none`

@@ -1,0 +1,17 @@
+[package]
+name = "email-interface"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+async-trait = "0.1.89"
+base64 = "0.22.1"
+chrono = { version = "0.4.42", features = ["serde"] }
+clap = { version = "4.5.38", features = ["derive"] }
+reqwest = { version = "0.12.15", features = ["json", "rustls-tls"] }
+rig = { package = "rig-core", version = "0.32.0" }
+serde = { version = "1.0.219", features = ["derive"] }
+serde_json = "1.0.140"
+thiserror = "2.0.12"
+tokio = { version = "1.45.1", features = ["macros", "rt-multi-thread"] }
+tokio-postgres = { version = "0.7.16", features = ["with-serde_json-1"] }

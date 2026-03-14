@@ -1,0 +1,49 @@
+{
+  "context": {
+    "answer_endpoint": null,
+    "answer_endpoint_api_key": null,
+    "answer_endpoint_timeout_seconds": 30,
+    "conversation_history": [
+      "SYSTEM: supervisor delegated to mailbox_reader with instruction: Load up to 1 Gmail messages matching `subject:\"marianneai:\" newer_than:14d`."
+    ],
+    "current_classification": null,
+    "current_email_index": 0,
+    "current_intent": null,
+    "current_queue_record": null,
+    "current_response": null,
+    "current_validation": null,
+    "datagouv_mcp_endpoint": "http://127.0.0.1:8000/mcp",
+    "datagouv_mcp_timeout_seconds": 30,
+    "datagouv_mcp_tool": "search_datasets",
+    "datagouv_query_memory_cache": [],
+    "datagouv_query_memory_path": "./output/email-triage/datagouv-query-memory.md",
+    "emails": [],
+    "mailbox_loaded": false,
+    "max_emails": 1,
+    "objective": "Read recent Gmail messages, find the ones related to MarianneAI, extract sender intent, and queue valid tasks to None.",
+    "project_profile": {
+      "about": "L’IA citoyenne pour comprendre les données publiques.",
+      "name": "MarianneAI",
+      "relevance_hints": [
+        "questions about French public data",
+        "feature requests for MarianneAI",
+        "bug reports or operational problems",
+        "partnership, pilot, or demo inquiries",
+        "requests to analyze or explain public datasets"
+      ],
+      "valid_task_criteria": [
+        "the sender intent is specific and actionable",
+        "there is enough detail to route work without guessing core requirements",
+        "the request relates to MarianneAI or its public-data mission",
+        "the email includes enough context to create a job queue item"
+      ],
+      "website": "https://marianneai.org/"
+    },
+    "query": "subject:\"marianneai:\" newer_than:14d",
+    "queue_backend": "none",
+    "reviewed_emails": [],
+    "step_count": 1
+  },
+  "current_agent": "mailbox_reader",
+  "timestamp": "2026-03-14T15:18:13.161814Z"
+}

@@ -1,0 +1,1 @@
+Processed 5 email(s): 5 related to MarianneAI, 0 persisted to the None queue backend, 2 still need human review.
