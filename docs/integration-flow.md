@@ -1,34 +1,69 @@
 # Integration Flow
 
-## Service Roles
+## Service roles
 
-- `services/email-interface` handles inbound email, outbound email, and email-specific orchestration.
-- `services/web-interface` handles the public-facing site, demo entry points, and user interaction in the browser.
-- `services/open-data-service` handles retrieval from official French public data sources and response generation.
+- `services/open-data-service` is the shared backend API. It receives a normalized user question, retrieves official data, and returns one grounded response payload.
+- `services/web-interface` sends browser-originated questions to `open-data-service` and renders the returned answer, sources, and limitations.
+- `services/email-interface` extracts a question from inbound email, calls `open-data-service` with the same payload shape, and formats the response for human-reviewed sending.
 
-## Shared Request Path
+## Canonical contract
 
-1. A user submits a question through email or the web interface.
-2. The entry service converts that input into the shared request format defined in `shared/contracts`.
-3. The request is sent to `services/open-data-service`.
-4. The open-data service retrieves data from approved sources in `shared/data-sources`, builds the prompt, and generates an answer draft.
-5. The answer is returned in the shared response format with citations and verification metadata.
-6. The email interface sends the reply by email after review, and the web interface renders the same response in the browser.
+- Shared API contract: `shared/contracts/query-api-contract.json`
+- Shared demo scenarios: `shared/demo-scenarios/scenarios.json`
+- Shared prompts: `shared/prompts/*.txt`
 
-## Product Workflow
+All services should treat the contract in `shared/contracts` as the source of truth. The web and email services should not duplicate retrieval logic or prompt logic.
 
-1. Une question arrive
-2. MarianneAI cherche les bonnes sources
-3. L'assistant genere une reponse claire
-4. L'utilisateur verifie et envoie
+## Request flow
 
-## Contract Boundaries
+1. A user asks a question in the web interface or by email.
+2. The entry service converts that user input into:
+   - `POST /query`
+   - Body: `{"query": "<natural language question>"}`
+3. `open-data-service` runs the 3-agent workflow:
+   - Orchestrator: rewrites the user question into 1 to 3 search queries
+   - Dataset Scout: filters MCP/data.gouv results and selects up to 3 sources
+   - Answer Synthesizer: writes a concise answer grounded only in selected sources
+4. `open-data-service` returns a stable JSON response:
+   - `user_query`
+   - `selected_sources`
+   - `answer`
+   - `limitations`
+   - `trace`
+5. The caller renders or reformats that response without changing its meaning.
 
-- Email-specific metadata stays inside `services/email-interface` unless it is needed downstream.
-- UI state stays inside `services/web-interface`.
-- Retrieval logic, prompt assembly, source ranking, and answer generation stay inside `services/open-data-service`.
-- Only stable cross-service payloads should move into `shared/contracts`.
+## Runtime modes
 
-## Demo Goal
+- `USE_MOCK_GEMINI=true`: local deterministic Gemini fallback
+- `USE_MOCK_MCP=true`: local deterministic data.gouv/MCP fallback
 
-The same user question should produce a comparable sourced answer whether it comes from email or the web interface. That shared behavior is the center of the demo.
+These flags let frontend and email teams integrate immediately, even before real credentials or MCP wiring are available.
+
+## Web integration notes
+
+- Load suggestions from `GET /demo/scenarios`
+- Send the selected or typed query to `POST /query`
+- Render:
+  - `answer` as the main response block
+  - `selected_sources` as clickable official sources
+  - `limitations` as caveats
+  - `trace` optionally as loading/provenance steps
+
+## Email integration notes
+
+- Extract the citizen question from the inbound email
+- Call `POST /query` with the same payload used by the web interface
+- Convert the JSON response into an email draft
+- Keep the human review step before sending
+
+## MCP integration boundary
+
+Real MCP wiring is isolated in `services/open-data-service/app/services/mcp_service.py`.
+
+- Expected request from `open-data-service` to MCP:
+  - `POST {MCP_SERVER_URL}{MCP_SEARCH_PATH}`
+  - Body: `{"queries": ["query one", "query two"]}`
+- Expected MCP response:
+  - `{"results": [{"title": "...", "url": "...", "description": "..."}]}`
+
+If MCP is unavailable or returns invalid data, `open-data-service` falls back to mock datasets to preserve demo reliability.

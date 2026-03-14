@@ -1,0 +1,132 @@
+{
+  "service": "open-data-service",
+  "base_url_local": "http://localhost:8000",
+  "endpoints": [
+    {
+      "method": "GET",
+      "path": "/health",
+      "description": "Health check for local development, demos, and service orchestration.",
+      "response_example": {
+        "status": "ok",
+        "service": "DataGouv Alive API",
+        "environment": "development",
+        "mock_gemini": true,
+        "mock_mcp": true
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/demo/scenarios",
+      "description": "Shared demo prompts for the web and email demo flows.",
+      "response_example": {
+        "scenarios": [
+          "What are the latest official datasets about electric vehicle charging stations in France?",
+          "Find official data about water quality in Paris."
+        ]
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/query",
+      "description": "Main endpoint used by the web and email services. Accepts one natural-language query and returns a grounded answer based on selected official sources.",
+      "request": {
+        "type": "object",
+        "required": ["query"],
+        "properties": {
+          "query": {
+            "type": "string",
+            "example": "What official datasets are available for electric vehicle charging stations in France?"
+          }
+        }
+      },
+      "response": {
+        "type": "object",
+        "required": [
+          "user_query",
+          "selected_sources",
+          "answer",
+          "limitations",
+          "trace"
+        ],
+        "properties": {
+          "user_query": {
+            "type": "string"
+          },
+          "selected_sources": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "title",
+                "url",
+                "description",
+                "reason_for_selection",
+                "confidence_score"
+              ],
+              "properties": {
+                "title": {
+                  "type": "string"
+                },
+                "url": {
+                  "type": "string",
+                  "format": "uri"
+                },
+                "description": {
+                  "type": "string"
+                },
+                "reason_for_selection": {
+                  "type": "string"
+                },
+                "confidence_score": {
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 1
+                }
+              }
+            }
+          },
+          "answer": {
+            "type": "string"
+          },
+          "limitations": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "trace": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "response_example": {
+        "user_query": "What official datasets are available for electric vehicle charging stations in France?",
+        "selected_sources": [
+          {
+            "title": "Fichier consolidé des Bornes de Recharge pour Véhicules Électriques (IRVE)",
+            "url": "https://www.data.gouv.fr/fr/datasets/fichier-consolide-des-bornes-de-recharge-pour-vehicules-electriques-irve/",
+            "description": "Base de données consolidée des infrastructures de recharge publique pour véhicules électriques.",
+            "reason_for_selection": "This is the closest official match to the user query.",
+            "confidence_score": 0.95
+          }
+        ],
+        "answer": "Based on the selected data.gouv.fr sources, the strongest match is the IRVE dataset for public charging infrastructure in France.",
+        "limitations": [
+          "This answer is grounded only in the selected official sources.",
+          "Freshness depends on the metadata returned by the upstream source."
+        ],
+        "trace": [
+          "Started query processing.",
+          "Agent 1 (Orchestrator) analyzing query...",
+          "Calling MCP data.gouv.fr tools...",
+          "Agent 2 (Dataset Scout) filtering results...",
+          "Agent 3 (Answer Synthesizer) generating final response...",
+          "Synthesis complete."
+        ]
+      }
+    }
+  ]
+}
