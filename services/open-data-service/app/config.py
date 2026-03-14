@@ -15,13 +15,22 @@ class Settings(BaseSettings):
     gemini_api_key: str = ""
     gemini_model: str = "gemini-2.5-flash"
     use_mock_gemini: bool = True
-    use_mock_mcp: bool = True
-    mcp_server_url: str = "http://localhost:8080"
+    use_mock_mcp: bool = False
+    mcp_server_url: str = "https://mcp.data.gouv.fr/mcp"
     mcp_search_path: str = "/tools/datagouv_search"
     http_timeout_seconds: float = 20.0
+    enable_full_resource_download: bool = True
+    max_full_resource_bytes: int = 8_000_000
+    max_full_resource_rows: int = 25_000
+    enable_vertex_code_execution: bool = False
+    google_cloud_project: str = ""
+    google_cloud_location: str = "europe-west1"
+    vertex_code_execution_model: str = "gemini-2.5-flash"
+    max_vertex_buffer_chars: int = 200_000
     cors_allow_origins: str = "*"
     shared_dir: Path = SHARED_DIR
     service_dir: Path = SERVICE_DIR
+    reports_dir: Path = SERVICE_DIR / "generated_reports"
 
     model_config = SettingsConfigDict(
         env_file=".env",

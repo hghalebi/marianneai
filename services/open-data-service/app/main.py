@@ -3,7 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 
 from app.config import settings
-from app.routes import demo, health, query
+from app.routes import demo, health, query, reports
 from app.utils.logger import logger
 
 app = FastAPI(
@@ -23,6 +23,7 @@ app.add_middleware(
 app.include_router(health.router)
 app.include_router(demo.router)
 app.include_router(query.router)
+app.include_router(reports.router)
 
 
 @app.get("/", tags=["System"])
@@ -31,7 +32,7 @@ async def root() -> dict[str, object]:
         "service": settings.app_name,
         "status": "ok",
         "docs_url": "/docs",
-        "endpoints": ["/", "/health", "/demo/scenarios", "/query"],
+        "endpoints": ["/", "/health", "/demo/scenarios", "/query", "/reports/{report_id}/{filename}"],
     }
 
 

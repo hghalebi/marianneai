@@ -1,0 +1,77 @@
+%PDF-1.4
+1 0 obj << /Type /Catalog /Pages 2 0 R >> endobj
+2 0 obj << /Type /Pages /Kids [3 0 R] /Count 1 >> endobj
+3 0 obj << /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Contents 4 0 R /Resources << /Font << /F1 5 0 R >> >> >> endobj
+4 0 obj << /Length 2661 >> stream
+BT
+/F1 11 Tf
+50 790 Td
+14 TL
+(DataGouv Alive Expert Report) Tj
+T*
+() Tj
+T*
+(User query: What official datasets are available for electric vehicle charging stations in France?) Tj
+T*
+() Tj
+T*
+(Executive answer: As a data analysis grounded in the selected data.gouv.fr resources, the strongest match for 'What official datasets are available for electric vehicle charging stations in France?' is 'Belib' - Points de recharge pour véhicules électriques - Disponibilité temps réel'. Bornes de recharge Lidl contains 5 sampled charging points from a live operational feed.) Tj
+T*
+() Tj
+T*
+(Analysis summary: The backend analyzed 2 resource\(s\) to answer: 'What official datasets are available for electric vehicle charging stations in France?'. Main analytical signal: Bornes de recharge Lidl contains 5 sampled charging points from a live operational feed.) Tj
+T*
+() Tj
+T*
+(Key findings:) Tj
+T*
+(- Bornes de recharge Lidl contains 5 sampled charging points from a live operational feed.) Tj
+T*
+(- The full live resource exposes 5562 rows through the tabular API.) Tj
+T*
+(- The sample includes 5 distinct charging point identifiers.) Tj
+T*
+(- The sample spans locations such as rue Léonard de Vinci, 1545 Route de Saint-Gilles.) Tj
+T*
+(- The latest update visible in the analyzed sample is 2025-12-11.) Tj
+T*
+() Tj
+T*
+(Selected sources:) Tj
+T*
+(- Belib' - Points de recharge pour véhicules électriques - Disponibilité temps réel | https://www.data.gouv.fr/datasets/belib-points-de-recharge-pour-vehicules-electriques-disponibilite-temps-reel) Tj
+T*
+(- Bornes de Recharge pour Véhicules Électriques - IRVE | https://www.data.gouv.fr/datasets/bornes-de-recharge-pour-vehicules-electriques-irve) Tj
+T*
+(- Bornes de recharge Lidl | https://www.data.gouv.fr/datasets/bornes-de-recharge-lidl-1) Tj
+T*
+() Tj
+T*
+(Data coverage:) Tj
+T*
+(Bornes de recharge Lidl: 5 sampled rows out of 5562 total rows, time coverage 2024-06-28 to 2025-12-11, geographic sample rue Léonard de Vinci, 1545 Route de Saint-Gilles | Belib' - Points de recharge pour véhicules électriques - Disponibilité temps réel: 5 sampled rows out of 2182 total rows, time coverage 2025-09-22 to 2025-09-25, geographic sample 2 Rue Duroc 75007 Paris, 1 Rue Fernand Labori 75018 Paris, 1-3 Av. du Général Sarrail 75016 Paris) Tj
+T*
+() Tj
+T*
+(Limitations:) Tj
+T*
+(- This answer is grounded only in the selected sources and analyzed resources returned by the retrieval step.) Tj
+T*
+(- Some findings are based on resource samples and may need broader dataset inspection for exhaustive conclusions.) Tj
+T*
+(- No supported resource was found for dataset 'Bornes de Recharge pour Véhicules Électriques - IRVE'.) Tj
+ET
+endstream endobj
+5 0 obj << /Type /Font /Subtype /Type1 /BaseFont /Helvetica >> endobj
+xref
+0 6
+0000000000 65535 f 
+0000000009 00000 n 
+0000000058 00000 n 
+0000000115 00000 n 
+0000000241 00000 n 
+0000002954 00000 n 
+trailer << /Size 6 /Root 1 0 R >>
+startxref
+3024
+%%EOF

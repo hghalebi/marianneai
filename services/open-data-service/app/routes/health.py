@@ -14,4 +14,5 @@ async def health_check() -> HealthResponse:
         environment=settings.app_env,
         mock_gemini=settings.use_mock_gemini,
         mock_mcp=settings.use_mock_mcp,
+        vertex_code_execution_enabled=settings.enable_vertex_code_execution,
     )
