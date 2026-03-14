@@ -24,3 +24,10 @@ Owner: Michel
 - Do not duplicate retrieval or answer-generation logic here
 - Do not own outbound email behavior here
 - Keep contract changes synchronized through `shared/contracts`
+
+## Docker
+
+- Build and run locally with `docker compose up --build` from `services/web-interface`
+- The front is exposed on `http://localhost:4000`
+- Set `BACKEND_URL` in your shell or a local `.env` file to connect the proxy to the open-data service
+- Override `GEMINI_API_KEY` in your shell or a local `.env` file before starting the stack if needed

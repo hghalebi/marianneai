@@ -1,0 +1,14 @@
+services:
+  web-front:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      NODE_ENV: production
+      PORT: 4000
+      APP_URL: http://localhost:4000
+      BACKEND_URL: ${BACKEND_URL:-}
+      GEMINI_API_KEY: ${GEMINI_API_KEY:-YOUR_GEMINI_API_KEY}
+    ports:
+      - "4000:4000"
+    restart: unless-stopped
