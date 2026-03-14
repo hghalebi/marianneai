@@ -1,0 +1,6 @@
+entrypoint = "services/open-data-service/app/main.py"
+run = "cd services/open-data-service && uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload"
+
+[deployment]
+build = "cd services/open-data-service && pip install --upgrade pip && pip install -r requirements.txt"
+run = "cd services/open-data-service && uvicorn app.main:app --host 0.0.0.0 --port ${PORT:-8000}"

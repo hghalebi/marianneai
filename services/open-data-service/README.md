@@ -109,3 +109,95 @@ The optional analytics backend lives in `app/services/code_interpreter_analytics
 - It can use Vertex AI code execution when enabled
 - It returns structured JSON that the frontend can render directly
 - It falls back to local deterministic analytics when Vertex is unavailable
+
+## Deployment
+
+The recommended deployment target is Cloud Run.
+
+Files:
+
+- `services/open-data-service/Dockerfile`
+- `services/open-data-service/cloudbuild.cloudrun.yaml`
+- `services/open-data-service/scripts/deploy_cloud_run.sh`
+
+Prerequisites:
+
+- Google Cloud SDK installed and authenticated
+- A GCP project selected
+- Secret Manager secret named `GEMINI_API_KEY` if you want live Gemini
+- Required APIs enabled: Cloud Run, Cloud Build, Artifact Registry, Secret Manager
+
+Minimal deployment flow:
+
+```bash
+gcloud auth login
+gcloud config set project YOUR_PROJECT_ID
+gcloud auth application-default login
+```
+
+```bash
+cd /path/to/marianneai
+chmod +x services/open-data-service/scripts/deploy_cloud_run.sh
+services/open-data-service/scripts/deploy_cloud_run.sh
+```
+
+The deploy script:
+
+- creates the Artifact Registry repository if missing
+- builds the image from the monorepo root
+- pushes the image
+- deploys `open-data-service` to Cloud Run
+
+Useful overrides:
+
+```bash
+export GOOGLE_CLOUD_PROJECT=your-project-id
+export GOOGLE_CLOUD_LOCATION=europe-west1
+export ENABLE_VERTEX_CODE_EXECUTION=true
+export USE_MOCK_GEMINI=false
+export USE_MOCK_MCP=false
+services/open-data-service/scripts/deploy_cloud_run.sh
+```
+
+## Replit deployment
+
+If you want to ship quickly without GCP for now, Replit works well for the MVP.
+
+Recommendation:
+
+- Use a Reserved VM deployment first, not Autoscale
+
+Why:
+
+- the API generates PDF and XLSX files on local disk
+- with Autoscale, a later `GET /reports/...` request can hit a different instance
+- with a Reserved VM, the local generated files are much more predictable for a hackathon demo
+
+Files added for Replit:
+
+- repository root `.replit`
+
+Suggested Replit setup:
+
+1. Import the GitHub repo into Replit
+2. Open the root of the monorepo
+3. In Replit Secrets, set at least:
+   - `USE_MOCK_GEMINI=true`
+   - `USE_MOCK_MCP=false`
+   - `ENABLE_FULL_RESOURCE_DOWNLOAD=true`
+   - `CORS_ALLOW_ORIGINS=*`
+4. For the first demo deploy, keep Vertex disabled:
+   - `ENABLE_VERTEX_CODE_EXECUTION=false`
+   - `GOOGLE_CLOUD_PROJECT=` empty
+5. Create a deployment and pick `Reserved VM`
+
+The `.replit` file already uses:
+
+- build: `pip install -r services/open-data-service/requirements.txt`
+- run: `uvicorn app.main:app --host 0.0.0.0 --port $PORT`
+
+Important limitation:
+
+- report artifacts are currently stored on the instance filesystem
+- this is acceptable for a single-instance demo
+- if you later want Autoscale on Replit, move reports to object storage instead of local files

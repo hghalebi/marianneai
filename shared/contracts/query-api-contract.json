@@ -11,7 +11,8 @@
         "service": "DataGouv Alive API",
         "environment": "development",
         "mock_gemini": true,
-        "mock_mcp": true
+        "mock_mcp": true,
+        "vertex_code_execution_enabled": false
       }
     },
     {
@@ -46,7 +47,17 @@
           "selected_sources",
           "answer",
           "limitations",
-          "trace"
+          "trace",
+          "analysis_engine",
+          "analysis_summary",
+          "key_findings",
+          "data_coverage",
+          "dataset_columns",
+          "descriptive_statistics",
+          "regressions",
+          "charts",
+          "used_resources",
+          "report_artifacts"
         ],
         "properties": {
           "user_query": {
@@ -99,6 +110,107 @@
             "items": {
               "type": "string"
             }
+          },
+          "analysis_engine": {
+            "type": "string"
+          },
+          "analysis_summary": {
+            "type": "string"
+          },
+          "key_findings": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "data_coverage": {
+            "type": "string"
+          },
+          "dataset_row_count": {
+            "type": ["integer", "null"]
+          },
+          "dataset_columns": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "descriptive_statistics": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "column": { "type": "string" },
+                "non_null_count": { "type": "integer" },
+                "mean": { "type": ["number", "null"] },
+                "min": { "type": ["number", "null"] },
+                "max": { "type": ["number", "null"] },
+                "median": { "type": ["number", "null"] },
+                "stddev": { "type": ["number", "null"] }
+              }
+            }
+          },
+          "regressions": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "feature_x": { "type": "string" },
+                "feature_y": { "type": "string" },
+                "slope": { "type": "number" },
+                "intercept": { "type": "number" },
+                "r_squared": { "type": "number" },
+                "sample_size": { "type": "integer" }
+              }
+            }
+          },
+          "charts": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "chart_id": { "type": "string" },
+                "title": { "type": "string" },
+                "chart_type": { "type": "string" },
+                "description": { "type": "string" },
+                "x_key": { "type": "string" },
+                "y_keys": {
+                  "type": "array",
+                  "items": { "type": "string" }
+                },
+                "data": {
+                  "type": "array",
+                  "items": {
+                    "type": "object"
+                  }
+                }
+              }
+            }
+          },
+          "used_resources": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "dataset_title": { "type": "string" },
+                "resource_title": { "type": "string" },
+                "resource_url": { "type": "string", "format": "uri" },
+                "format": { "type": "string" }
+              }
+            }
+          },
+          "report_artifacts": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "report_id": { "type": "string" },
+                "format": { "type": "string" },
+                "filename": { "type": "string" },
+                "download_url": { "type": "string" },
+                "content_type": { "type": "string" }
+              }
+            }
           }
         }
       },
@@ -117,6 +229,73 @@
         "limitations": [
           "This answer is grounded only in the selected official sources.",
           "Freshness depends on the metadata returned by the upstream source."
+        ],
+        "analysis_engine": "heuristic-local",
+        "analysis_summary": "Local analytics processed the retrieved tabular resource and produced structured descriptive statistics, regression outputs, and chart payloads.",
+        "key_findings": [
+          "The backend analyzed the retrieved charging infrastructure table.",
+          "Frontend-ready chart payloads were generated for direct rendering."
+        ],
+        "data_coverage": "2500 total rows, time coverage 2025-01-01 to 2025-12-31",
+        "dataset_row_count": 2500,
+        "dataset_columns": ["date", "region", "stations", "charge_points"],
+        "descriptive_statistics": [
+          {
+            "column": "charge_points",
+            "non_null_count": 2500,
+            "mean": 12.8,
+            "min": 1,
+            "max": 48,
+            "median": 8,
+            "stddev": 7.1
+          }
+        ],
+        "regressions": [
+          {
+            "feature_x": "stations",
+            "feature_y": "charge_points",
+            "slope": 2.31,
+            "intercept": 0.42,
+            "r_squared": 0.91,
+            "sample_size": 2500
+          }
+        ],
+        "charts": [
+          {
+            "chart_id": "time-series-charge-points",
+            "title": "Charge points over time",
+            "chart_type": "line",
+            "description": "Average charge points grouped by date.",
+            "x_key": "date",
+            "y_keys": ["charge_points"],
+            "data": [
+              { "date": "2025-01-01", "charge_points": 11.2 }
+            ]
+          }
+        ],
+        "used_resources": [
+          {
+            "dataset_title": "Fichier consolidé des Bornes de Recharge pour Véhicules Électriques (IRVE)",
+            "resource_title": "irve.csv",
+            "resource_url": "https://www.data.gouv.fr/resource.csv",
+            "format": "csv"
+          }
+        ],
+        "report_artifacts": [
+          {
+            "report_id": "abc123",
+            "format": "pdf",
+            "filename": "analysis-report.pdf",
+            "download_url": "/reports/abc123/analysis-report.pdf",
+            "content_type": "application/pdf"
+          },
+          {
+            "report_id": "abc123",
+            "format": "xlsx",
+            "filename": "analysis-report.xlsx",
+            "download_url": "/reports/abc123/analysis-report.xlsx",
+            "content_type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+          }
         ],
         "trace": [
           "Started query processing.",

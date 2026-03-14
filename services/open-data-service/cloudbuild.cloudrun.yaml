@@ -1,0 +1,59 @@
+steps:
+  - name: gcr.io/cloud-builders/docker
+    args:
+      - build
+      - -f
+      - services/open-data-service/Dockerfile
+      - -t
+      - ${_IMAGE_URI}
+      - .
+
+  - name: gcr.io/cloud-builders/docker
+    args:
+      - push
+      - ${_IMAGE_URI}
+
+  - name: gcr.io/google.com/cloudsdktool/cloud-sdk
+    entrypoint: gcloud
+    args:
+      - run
+      - deploy
+      - ${_SERVICE_NAME}
+      - --image
+      - ${_IMAGE_URI}
+      - --region
+      - ${_REGION}
+      - --platform
+      - managed
+      - --allow-unauthenticated
+      - --port
+      - "8000"
+      - --memory
+      - 1Gi
+      - --cpu
+      - "1"
+      - --timeout
+      - "300"
+      - --set-env-vars
+      - APP_ENV=production,USE_MOCK_GEMINI=${_USE_MOCK_GEMINI},USE_MOCK_MCP=${_USE_MOCK_MCP},ENABLE_FULL_RESOURCE_DOWNLOAD=${_ENABLE_FULL_RESOURCE_DOWNLOAD},MAX_FULL_RESOURCE_BYTES=${_MAX_FULL_RESOURCE_BYTES},MAX_FULL_RESOURCE_ROWS=${_MAX_FULL_RESOURCE_ROWS},ENABLE_VERTEX_CODE_EXECUTION=${_ENABLE_VERTEX_CODE_EXECUTION},GOOGLE_CLOUD_PROJECT=${PROJECT_ID},GOOGLE_CLOUD_LOCATION=${_REGION},VERTEX_CODE_EXECUTION_MODEL=${_VERTEX_CODE_EXECUTION_MODEL},MAX_VERTEX_BUFFER_CHARS=${_MAX_VERTEX_BUFFER_CHARS},MCP_SERVER_URL=${_MCP_SERVER_URL},CORS_ALLOW_ORIGINS=${_CORS_ALLOW_ORIGINS}
+      - --set-secrets
+      - GEMINI_API_KEY=${_GEMINI_SECRET}:latest
+
+substitutions:
+  _SERVICE_NAME: open-data-service
+  _REGION: europe-west1
+  _IMAGE_URI: europe-west1-docker.pkg.dev/$PROJECT_ID/marianneai/open-data-service:latest
+  _GEMINI_SECRET: GEMINI_API_KEY
+  _USE_MOCK_GEMINI: "false"
+  _USE_MOCK_MCP: "false"
+  _ENABLE_FULL_RESOURCE_DOWNLOAD: "true"
+  _MAX_FULL_RESOURCE_BYTES: "8000000"
+  _MAX_FULL_RESOURCE_ROWS: "25000"
+  _ENABLE_VERTEX_CODE_EXECUTION: "false"
+  _VERTEX_CODE_EXECUTION_MODEL: gemini-2.5-flash
+  _MAX_VERTEX_BUFFER_CHARS: "200000"
+  _MCP_SERVER_URL: https://mcp.data.gouv.fr/mcp
+  _CORS_ALLOW_ORIGINS: "*"
+
+images:
+  - ${_IMAGE_URI}
