@@ -1,5 +1,7 @@
 <div class="app-shell min-h-screen bg-gray-50 text-gray-900 font-sans flex flex-col">
-  <header class="header-surface bg-white/90 shadow-sm border-b border-gray-200">
+  <div class="app-ornament app-ornament-blue"></div>
+  <div class="app-ornament app-ornament-red"></div>
+  <header class="header-surface screen-only bg-white/90 shadow-sm border-b border-gray-200">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex flex-col sm:flex-row items-center justify-between gap-4">
       <div class="brand-lockup flex items-center space-x-3">
         <img src="logo-mariene.png" alt="MarianneAI Logo" class="brand-logo h-12 w-auto object-contain" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
@@ -22,7 +24,7 @@
     </div>
   </header>
 
-  <main class="flex-grow flex flex-col items-center pt-12 pb-24 px-4 sm:px-6 lg:px-8 w-full max-w-4xl mx-auto">
+  <main class="report-main flex-grow flex flex-col items-center pt-12 pb-24 px-4 sm:px-6 lg:px-8 w-full max-w-4xl mx-auto">
     <div class="hero-panel w-full text-center mb-8 transition-all duration-500" [ngClass]="{'mt-16': !response() && !isLoading()}">
       @if (!response() && !isLoading()) {
         <h2 class="text-3xl sm:text-4xl font-extrabold text-gray-900 mb-4">
@@ -30,7 +32,7 @@
         </h2>
       }
 
-      <div class="search-shell relative max-w-3xl mx-auto">
+      <div class="search-shell screen-only relative max-w-3xl mx-auto">
         <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
           <svg class="search-icon h-6 w-6 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
@@ -59,7 +61,7 @@
       </div>
 
       @if (!response() && !isLoading() && scenarios().length > 0) {
-        <div class="mt-6 flex flex-wrap justify-center gap-2">
+        <div class="screen-only mt-6 flex flex-wrap justify-center gap-2">
           @for (scenario of scenarios(); track scenario; let i = $index) {
             <button
               (click)="selectScenario(scenario)"
@@ -89,7 +91,41 @@
 
     @if (response() && !isLoading()) {
       <div class="result-stack w-full max-w-3xl space-y-6 animate-fade-in">
-        <div class="flex justify-end">
+        <section class="print-report-header print-only">
+          <p class="print-eyebrow">MarianneAI · Rapport d'analyse</p>
+          <h2>{{ queryText() || response()?.user_query }}</h2>
+          <p>Document généré le {{ getPrintTimestamp() }}</p>
+        </section>
+
+        <div class="screen-only flex flex-wrap justify-end gap-3">
+          @if (getReportArtifact('pdf'); as pdfArtifact) {
+            <button
+              type="button"
+              (click)="downloadArtifact(pdfArtifact)"
+              [disabled]="!pdfArtifact.download_url || downloadingArtifact() === pdfArtifact.filename"
+              class="pdf-button interactive-button card-enter inline-flex items-center gap-2 rounded-xl border border-gray-200 bg-white px-4 py-2 text-sm font-semibold text-[#002654] shadow-sm transition-colors hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-60"
+            >
+              <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 16V4m0 12l-4-4m4 4l4-4M4 20h16" />
+              </svg>
+              {{ downloadingArtifact() === pdfArtifact.filename ? 'Téléchargement du PDF...' : 'Télécharger le PDF backend' }}
+            </button>
+          }
+
+          @if (getReportArtifact('xlsx'); as xlsxArtifact) {
+            <button
+              type="button"
+              (click)="downloadArtifact(xlsxArtifact)"
+              [disabled]="!xlsxArtifact.download_url || downloadingArtifact() === xlsxArtifact.filename"
+              class="interactive-button card-enter inline-flex items-center gap-2 rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-2 text-sm font-semibold text-emerald-800 shadow-sm transition-colors hover:bg-emerald-100 disabled:cursor-not-allowed disabled:opacity-60"
+            >
+              <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 7h16M4 12h16M4 17h10" />
+              </svg>
+              {{ downloadingArtifact() === xlsxArtifact.filename ? 'Téléchargement Excel...' : 'Télécharger l’Excel backend' }}
+            </button>
+          }
+
           <button
             type="button"
             (click)="downloadPdf()"
@@ -117,6 +153,205 @@
             <p class="text-gray-800 leading-relaxed whitespace-pre-wrap">{{ response()?.answer }}</p>
           </div>
         </div>
+
+        <div class="grid gap-4 md:grid-cols-3">
+          <div class="result-card card-enter delay-1 rounded-2xl border border-gray-200 bg-white p-5 shadow-sm">
+            <p class="text-xs font-semibold uppercase tracking-wide text-gray-500">Moteur d'analyse</p>
+            <p class="mt-2 text-lg font-semibold text-[#002654]">{{ response()?.analysis_engine || 'N/A' }}</p>
+          </div>
+          <div class="result-card card-enter delay-1 rounded-2xl border border-gray-200 bg-white p-5 shadow-sm">
+            <p class="text-xs font-semibold uppercase tracking-wide text-gray-500">Lignes analysées</p>
+            <p class="mt-2 text-lg font-semibold text-[#002654]">{{ formatNumber(response()?.dataset_row_count) }}</p>
+          </div>
+          <div class="result-card card-enter delay-1 rounded-2xl border border-gray-200 bg-white p-5 shadow-sm">
+            <p class="text-xs font-semibold uppercase tracking-wide text-gray-500">Ressources exploitées</p>
+            <p class="mt-2 text-lg font-semibold text-[#002654]">{{ response()?.used_resources?.length || 0 }}</p>
+          </div>
+        </div>
+
+        @if (response()?.analysis_summary) {
+          <div class="result-card card-enter delay-2 bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
+            <div class="bg-gray-50 px-6 py-4 border-b border-gray-200 flex items-center space-x-3">
+              <svg class="h-5 w-5 text-[#002654]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M5 12a7 7 0 1114 0A7 7 0 015 12z" />
+              </svg>
+              <h3 class="text-md font-semibold text-gray-900">Résumé analytique</h3>
+            </div>
+            <div class="p-6 space-y-4">
+              <p class="text-gray-700 leading-relaxed">{{ response()?.analysis_summary }}</p>
+              @if (response()?.data_coverage) {
+                <div class="rounded-xl border border-blue-100 bg-blue-50 p-4">
+              <p class="text-xs font-semibold uppercase tracking-wide text-blue-700">Couverture des données</p>
+                  <ul class="mt-2 space-y-2 text-sm leading-relaxed text-blue-900">
+                    @for (coverageLine of getCoverageLines(); track coverageLine) {
+                      <li>{{ coverageLine }}</li>
+                    }
+                  </ul>
+                </div>
+              }
+              @if (getTopColumns().length) {
+                <div>
+                  <p class="text-xs font-semibold uppercase tracking-wide text-gray-500">Colonnes analysées</p>
+                  <div class="mt-3 flex flex-wrap gap-2">
+                    @for (column of getTopColumns(); track column) {
+                      <span class="rounded-full border border-gray-200 bg-gray-50 px-3 py-1 text-xs text-gray-700">{{ formatFieldLabel(column) }}</span>
+                    }
+                  </div>
+                </div>
+              }
+            </div>
+          </div>
+        }
+
+        @if (response()?.key_findings?.length) {
+          <div class="result-card card-enter delay-2 bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
+            <div class="bg-gray-50 px-6 py-4 border-b border-gray-200 flex items-center space-x-3">
+              <svg class="h-5 w-5 text-amber-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5h2m-1 0v14m-7-7h14" />
+              </svg>
+              <h3 class="text-md font-semibold text-gray-900">Constats clés</h3>
+            </div>
+            <div class="p-6">
+              <ul class="space-y-3">
+                @for (finding of response()?.key_findings; track finding) {
+                  <li class="rounded-xl border border-amber-100 bg-amber-50 px-4 py-3 text-sm text-amber-900">{{ finding }}</li>
+                }
+              </ul>
+            </div>
+          </div>
+        }
+
+        @if (response()?.descriptive_statistics?.length) {
+          <div class="result-card card-enter delay-3 bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
+            <div class="bg-gray-50 px-6 py-4 border-b border-gray-200 flex items-center space-x-3">
+              <svg class="h-5 w-5 text-[#002654]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3v18h18M8 14l3-3 2 2 5-5" />
+              </svg>
+              <h3 class="text-md font-semibold text-gray-900">Statistiques descriptives</h3>
+            </div>
+            <div class="overflow-x-auto">
+              <table class="min-w-full divide-y divide-gray-200 text-sm">
+                <thead class="bg-gray-50 text-left text-xs font-semibold uppercase tracking-wide text-gray-500">
+                  <tr>
+                    <th class="px-4 py-3">Colonne</th>
+                    <th class="px-4 py-3">Moyenne</th>
+                    <th class="px-4 py-3">Médiane</th>
+                    <th class="px-4 py-3">Min</th>
+                    <th class="px-4 py-3">Max</th>
+                    <th class="px-4 py-3">Écart-type</th>
+                  </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-100 bg-white">
+                  @for (stat of response()?.descriptive_statistics; track stat.column) {
+                    <tr>
+                      <td class="px-4 py-3 font-medium text-gray-900">{{ formatFieldLabel(stat.column) }}</td>
+                      <td class="px-4 py-3 text-gray-700">{{ formatNumber(stat.mean) }}</td>
+                      <td class="px-4 py-3 text-gray-700">{{ formatNumber(stat.median) }}</td>
+                      <td class="px-4 py-3 text-gray-700">{{ formatNumber(stat.min) }}</td>
+                      <td class="px-4 py-3 text-gray-700">{{ formatNumber(stat.max) }}</td>
+                      <td class="px-4 py-3 text-gray-700">{{ formatNumber(stat.stddev) }}</td>
+                    </tr>
+                  }
+                </tbody>
+              </table>
+            </div>
+          </div>
+        }
+
+        @if (response()?.regressions?.length) {
+          <div class="result-card card-enter delay-3 bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
+            <div class="bg-gray-50 px-6 py-4 border-b border-gray-200 flex items-center space-x-3">
+              <svg class="h-5 w-5 text-emerald-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 19V6m0 0L7 10m4-4l4 4M5 19h14" />
+              </svg>
+              <h3 class="text-md font-semibold text-gray-900">Régressions détectées</h3>
+            </div>
+            <div class="p-6 grid gap-4 md:grid-cols-2">
+              @for (regression of response()?.regressions; track regression.feature_x + regression.feature_y) {
+                <div class="rounded-2xl border border-emerald-100 bg-emerald-50 p-4">
+                  <p class="text-sm font-semibold text-emerald-900">{{ regression.feature_y }} vs {{ regression.feature_x }}</p>
+                  <div class="mt-3 grid grid-cols-2 gap-3 text-sm text-emerald-900">
+                    <p><span class="font-medium">Pente:</span> {{ formatNumber(regression.slope) }}</p>
+                    <p><span class="font-medium">Intercept:</span> {{ formatNumber(regression.intercept) }}</p>
+                    <p><span class="font-medium">R²:</span> {{ formatPercent(regression.r_squared) }}</p>
+                    <p><span class="font-medium">Échantillon:</span> {{ formatNumber(regression.sample_size) }}</p>
+                  </div>
+                </div>
+              }
+            </div>
+          </div>
+        }
+
+        @if (response()?.charts?.length) {
+          <div class="result-card card-enter delay-3 bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
+            <div class="bg-gray-50 px-6 py-4 border-b border-gray-200 flex items-center space-x-3">
+              <svg class="h-5 w-5 text-fuchsia-700" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 12l3-3 2 2 5-5M5 19h14" />
+              </svg>
+              <h3 class="text-md font-semibold text-gray-900">Visualisations préparées pour le front</h3>
+            </div>
+            <div class="grid gap-5 p-6 xl:grid-cols-2">
+              @for (chart of response()?.charts; track chart.chart_id) {
+                <div class="rounded-2xl border border-gray-200 bg-gray-50 p-4">
+                  <div class="mb-4">
+                    <p class="text-sm font-semibold text-gray-900">{{ chart.title }}</p>
+                    <p class="mt-1 text-xs leading-relaxed text-gray-500">{{ chart.description }}</p>
+                  </div>
+
+                  @if (chart.chart_type === 'line' && getLineChartPoints(chart)) {
+                    <svg viewBox="0 0 300 140" class="chart-stage h-44 w-full rounded-xl bg-white p-3 shadow-inner">
+                      <line x1="20" y1="120" x2="280" y2="120" stroke="#cbd5e1" stroke-width="1"></line>
+                      <line x1="20" y1="20" x2="20" y2="120" stroke="#cbd5e1" stroke-width="1"></line>
+                      <polyline [attr.points]="getLineChartPoints(chart)" fill="none" stroke="#002654" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"></polyline>
+                    </svg>
+                  }
+
+                  @if (chart.chart_type === 'bar') {
+                    <svg viewBox="0 0 300 140" class="chart-stage h-44 w-full rounded-xl bg-white p-3 shadow-inner">
+                      <line x1="20" y1="120" x2="280" y2="120" stroke="#cbd5e1" stroke-width="1"></line>
+                      @for (bar of getBarChartBars(chart); track bar.label) {
+                        <rect [attr.x]="bar.x" [attr.y]="bar.y" [attr.width]="bar.width" [attr.height]="bar.height" rx="6" fill="#0f766e"></rect>
+                      }
+                    </svg>
+                  }
+
+                  @if (chart.chart_type === 'scatter') {
+                    <svg viewBox="0 0 300 140" class="chart-stage h-44 w-full rounded-xl bg-white p-3 shadow-inner">
+                      <line x1="20" y1="120" x2="280" y2="120" stroke="#cbd5e1" stroke-width="1"></line>
+                      <line x1="20" y1="20" x2="20" y2="120" stroke="#cbd5e1" stroke-width="1"></line>
+                      @for (point of getScatterChartPoints(chart); track point.label) {
+                        <circle [attr.cx]="point.cx" [attr.cy]="point.cy" r="3" fill="#7c3aed"></circle>
+                      }
+                    </svg>
+                  }
+
+                  <div class="screen-only mt-4 overflow-x-auto rounded-xl border border-gray-200 bg-white">
+                    <table class="min-w-full text-xs">
+                      <thead class="bg-gray-50 text-left font-semibold uppercase tracking-wide text-gray-500">
+                        <tr>
+                          <th class="px-3 py-2">{{ formatFieldLabel(chart.x_key, 30) }}</th>
+                          @for (yKey of chart.y_keys; track yKey) {
+                            <th class="px-3 py-2">{{ formatFieldLabel(yKey, 30) }}</th>
+                          }
+                        </tr>
+                      </thead>
+                      <tbody class="divide-y divide-gray-100">
+                        @for (row of getChartDataPreview(chart); track $index) {
+                          <tr>
+                            <td class="px-3 py-2 text-gray-700">{{ row[chart.x_key] }}</td>
+                            @for (yKey of chart.y_keys; track yKey) {
+                              <td class="px-3 py-2 text-gray-700">{{ row[yKey] }}</td>
+                            }
+                          </tr>
+                        }
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              }
+            </div>
+          </div>
+        }
 
         @if (response()?.selected_sources?.length) {
           <div class="result-card card-enter delay-2 bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
@@ -150,6 +385,36 @@
           </div>
         }
 
+        @if (response()?.used_resources?.length) {
+          <div class="result-card card-enter delay-3 bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
+            <div class="bg-gray-50 px-6 py-4 border-b border-gray-200 flex items-center space-x-3">
+              <svg class="h-5 w-5 text-[#002654]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10m-11 9h12a2 2 0 002-2V7a2 2 0 00-2-2H6a2 2 0 00-2 2v11a2 2 0 002 2z" />
+              </svg>
+              <h3 class="text-md font-semibold text-gray-900">Ressources effectivement exploitées</h3>
+            </div>
+            <div class="divide-y divide-gray-100">
+              @for (resource of response()?.used_resources; track resource.resource_url) {
+                <div class="p-5">
+                  <div class="flex items-start justify-between gap-4">
+                    <div>
+                      <p class="text-sm font-semibold text-gray-900">{{ resource.dataset_title }}</p>
+                      <p class="mt-1 text-sm text-gray-600">{{ resource.resource_title }}</p>
+                    </div>
+                    <span class="rounded-full border border-gray-200 bg-gray-50 px-2.5 py-1 text-xs font-medium uppercase tracking-wide text-gray-600">{{ resource.format }}</span>
+                  </div>
+                  <a [href]="resource.resource_url" target="_blank" rel="noopener noreferrer" class="mt-3 inline-flex items-center text-sm font-medium text-[#002654] hover:underline">
+                    Ouvrir la ressource
+                    <svg class="ml-1 h-4 w-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                    </svg>
+                  </a>
+                </div>
+              }
+            </div>
+          </div>
+        }
+
         @if (response()?.limitations?.length) {
           <div class="result-card card-enter delay-3 bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
             <div class="bg-gray-50 px-6 py-4 border-b border-gray-200 flex items-center space-x-3">
@@ -169,6 +434,7 @@
         }
 
         <details class="trace-card result-card card-enter delay-4 bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden group">
+        
           <summary class="trace-summary bg-gray-50 px-6 py-4 flex items-center justify-between cursor-pointer hover:bg-gray-100 transition-colors">
             <div class="flex items-center space-x-3">
               <svg class="h-5 w-5 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">

@@ -60,7 +60,7 @@ export async function createStyledPdf(report: QueryResponse, logoPath: string): 
     let latexFragment = buildFallbackLatexFragment(report);
     let source: StyledPdfResult['source'] = 'fallback';
 
-    if (isGeminiConfigured(process.env['GEMINI_API_KEY'])) {
+    if (isGeminiConfigured(process.env['GEMINI_API_KEY']) && process.env['ENABLE_GEMINI_PDF_STYLING'] === 'true') {
       try {
         const geminiFragment = await buildGeminiLatexFragment(report);
         if (isSafeLatexFragment(geminiFragment)) {
@@ -162,20 +162,70 @@ function isSafeLatexFragment(fragment: string): boolean {
 }
 
 function buildFallbackLatexFragment(report: QueryResponse): string {
+  const metricsLine = [
+    `\\metriccard{Moteur d'analyse}{${escapeLatex(report.analysis_engine || 'N/A')}}`,
+    `\\metriccard{Lignes analysées}{${escapeLatex(formatMetric(report.dataset_row_count))}}`,
+    `\\metriccard{Ressources exploitées}{${escapeLatex(String(report.used_resources.length))}}`,
+  ].join('\n\\hfill\n');
+
   const lines = [
-    '\\reportsubtitle{Synthèse citoyenne mise en page automatiquement aux couleurs de MarianneAI.}',
+    '\\reportsubtitle{Synthèse citoyenne premium générée automatiquement pour la démo MarianneAI.}',
     `\\highlightbox{Résumé exécutif}{${escapeLatex(report.answer)}}`,
+    '\\sectiontitle{Instantané}',
+    metricsLine,
     '\\sectiontitle{Question posée}',
     `\\bodytext{${escapeLatex(report.user_query)}}`,
-    '\\sectiontitle{Réponse détaillée}',
-    `\\bodytext{${escapeLatex(report.answer)}}`,
   ];
+
+  if (report.analysis_summary) {
+    lines.push('\\sectiontitle{Lecture analytique}');
+    lines.push(`\\highlightbox{Synthèse analytique}{${escapeLatex(report.analysis_summary)}}`);
+  }
+
+  if (report.key_findings.length > 0) {
+    lines.push('\\sectiontitle{Constats clés}');
+    report.key_findings.forEach((finding) => {
+      lines.push(`\\bulletitem{${escapeLatex(finding)}}`);
+    });
+  }
+
+  if (report.data_coverage) {
+    lines.push('\\sectiontitle{Couverture des données}');
+    lines.push(`\\bodytext{${escapeLatex(report.data_coverage)}}`);
+  }
+
+  if (report.descriptive_statistics.length > 0) {
+    lines.push('\\sectiontitle{Statistiques descriptives}');
+    lines.push(buildStatisticsTable(report));
+  }
+
+  if (report.regressions.length > 0) {
+    lines.push('\\sectiontitle{Régressions linéaires}');
+    lines.push(buildRegressionsTable(report));
+  }
+
+  if (report.charts.length > 0) {
+    lines.push('\\sectiontitle{Visualisations préparées}');
+    report.charts.forEach((chart) => {
+      const chartLine = `${chart.title} (${chart.chart_type}) - ${chart.description || 'Visualisation prête pour le frontend.'}`;
+      lines.push(`\\bulletitem{${escapeLatex(chartLine)}}`);
+    });
+  }
+
+  if (report.used_resources.length > 0) {
+    lines.push('\\sectiontitle{Ressources exploitées}');
+    report.used_resources.forEach((resource) => {
+      lines.push(
+        `\\resourcecard{${escapeLatex(resource.dataset_title)}}{${escapeLatex(resource.resource_title)}}{${escapeLatex(resource.format.toUpperCase())}}{${escapeUrl(resource.resource_url)}}`,
+      );
+    });
+  }
 
   if (report.selected_sources.length > 0) {
     lines.push('\\sectiontitle{Sources officielles}');
     report.selected_sources.forEach((source) => {
       lines.push(
-        `\\sourcecard{${escapeLatex(source.title)}}{${escapeLatex(source.url)}}{${escapeLatex(source.description)}}{${escapeLatex(source.reason_for_selection)}}{${Math.round(source.confidence_score * 100)}}`,
+        `\\sourcecard{${escapeLatex(source.title)}}{${escapeUrl(source.url)}}{${escapeLatex(source.description)}}{${escapeLatex(source.reason_for_selection)}}{${Math.round(source.confidence_score * 100)}}`,
       );
     });
   }
@@ -216,64 +266,100 @@ function buildLatexDocument(fragment: string): string {
 \\usepackage{hyperref}
 \\usepackage{tikz}
 \\usepackage[most]{tcolorbox}
+\\usepackage{tabularx}
+\\usepackage{booktabs}
+\\usepackage{microtype}
+\\usepackage{pagecolor}
+\\usepackage{fancyhdr}
 \\geometry{margin=1.6cm}
 \\setlength{\\parindent}{0pt}
 \\setlength{\\parskip}{4pt}
 \\definecolor{brandblue}{HTML}{002654}
 \\definecolor{brandred}{HTML}{ED2939}
 \\definecolor{brandsoft}{HTML}{F5F7FB}
+\\definecolor{brandpaper}{HTML}{F8FAFC}
+\\definecolor{brandink}{HTML}{0F172A}
+\\pagecolor{brandpaper}
+\\color{brandink}
 \\hypersetup{
   colorlinks=true,
   urlcolor=brandred,
   linkcolor=brandblue
 }
+\\urlstyle{same}
+\\emergencystretch=2em
+\\sloppy
+\\pagestyle{fancy}
+\\fancyhf{}
+\\fancyhead[L]{\\textcolor{brandblue}{\\textbf{MarianneAI}}}
+\\fancyhead[R]{\\textcolor{brandred}{Rapport d'analyse}}
+\\fancyfoot[C]{\\textcolor{brandblue}{\\thepage}}
+\\renewcommand{\\headrulewidth}{0pt}
+\\renewcommand{\\footrulewidth}{0pt}
 \\newcommand{\\reportsubtitle}[1]{
-  \\begin{tcolorbox}[colback=brandsoft,colframe=brandblue!18,arc=3pt,boxrule=0pt]
+  \\begin{tcolorbox}[colback=white,colframe=brandblue!18,arc=5pt,boxrule=0pt,left=10pt,right=10pt,top=10pt,bottom=10pt]
   #1
   \\end{tcolorbox}
 }
 \\newcommand{\\sectiontitle}[1]{
-  \\vspace{4pt}
-  {\\Large\\bfseries\\textcolor{brandblue}{#1}}\\par\\vspace{4pt}
+  \\vspace{8pt}
+  {\\Large\\bfseries\\textcolor{brandblue}{#1}}\\par
+  {\\color{brandred}\\rule{0.18\\linewidth}{1.2pt}}\\par\\vspace{4pt}
 }
 \\newcommand{\\bodytext}[1]{
   #1\\par
 }
 \\newcommand{\\highlightbox}[2]{
-  \\begin{tcolorbox}[colback=brandblue!5,colframe=brandblue,arc=3pt,boxrule=0.8pt,title={\\textbf{#1}},colbacktitle=brandblue,coltitle=white]
+  \\begin{tcolorbox}[colback=white,colframe=brandblue,arc=5pt,boxrule=0.9pt,title={\\textbf{#1}},colbacktitle=brandblue,coltitle=white,left=10pt,right=10pt,top=10pt,bottom=10pt]
   #2
   \\end{tcolorbox}
 }
+\\newcommand{\\metriccard}[2]{
+  \\begin{minipage}[t]{0.31\\linewidth}
+    \\begin{tcolorbox}[colback=white,colframe=brandblue!12,arc=5pt,boxrule=0.4pt,left=8pt,right=8pt,top=8pt,bottom=8pt]
+      {\\scriptsize\\textcolor{brandred}{\\textbf{#1}}}\\par
+      \\vspace{3pt}
+      {\\Large\\bfseries\\textcolor{brandblue}{#2}}
+    \\end{tcolorbox}
+  \\end{minipage}
+}
 \\newcommand{\\sourcecard}[5]{
-  \\begin{tcolorbox}[colback=white,colframe=brandred!70!brandblue,arc=3pt,boxrule=0.7pt]
+  \\begin{tcolorbox}[colback=white,colframe=brandred!70!brandblue,arc=5pt,boxrule=0.7pt,left=10pt,right=10pt,top=10pt,bottom=10pt]
     {\\large\\bfseries\\textcolor{brandblue}{#1}}\\hfill {\\bfseries\\textcolor{brandred}{#5\\%}}\\par
-    {\\small\\texttt{#2}}\\par\\vspace{4pt}
+    {\\small\\url{#2}}\\par\\vspace{4pt}
     #3\\par\\vspace{4pt}
     {\\bfseries Pourquoi cette source :} #4
   \\end{tcolorbox}
 }
+\\newcommand{\\resourcecard}[4]{
+  \\begin{tcolorbox}[colback=white,colframe=brandblue!18,arc=5pt,boxrule=0.5pt,left=10pt,right=10pt,top=10pt,bottom=10pt]
+    {\\bfseries\\textcolor{brandblue}{#1}}\\hfill {\\bfseries\\textcolor{brandred}{#3}}\\par
+    {\\small #2}\\par\\vspace{4pt}
+    {\\small\\url{#4}}
+  \\end{tcolorbox}
+}
 \\newcommand{\\bulletitem}[1]{
   \\noindent\\textcolor{brandred}{\\large$\\bullet$}\\hspace{0.6em}
-  \\begin{minipage}[t]{0.92\\linewidth}#1\\end{minipage}\\par\\vspace{4pt}
+  \\begin{minipage}[t]{0.92\\linewidth}\\raggedright #1\\end{minipage}\\par\\vspace{6pt}
 }
 \\newcommand{\\traceitem}[2]{
   \\noindent\\textcolor{brandblue}{\\textbf{#1.}}\\hspace{0.6em}
-  \\begin{minipage}[t]{0.9\\linewidth}#2\\end{minipage}\\par\\vspace{4pt}
+  \\begin{minipage}[t]{0.9\\linewidth}\\raggedright #2\\end{minipage}\\par\\vspace{4pt}
 }
 \\begin{document}
-\\begin{minipage}[c]{0.16\\linewidth}
-  \\includegraphics[width=\\linewidth]{logo-mariene.png}
-\\end{minipage}
-\\hfill
-\\begin{minipage}[c]{0.8\\linewidth}
-  {\\Huge\\bfseries\\textcolor{brandblue}{Rapport MarianneAI}}\\par
-  {\\large\\textcolor{brandred}{PDF stylé généré côté backend}}\\par
-  {\\small Généré le ${generatedAt}}
-\\end{minipage}
+\\begin{tcolorbox}[enhanced,colback=white,colframe=brandblue!12,arc=6pt,boxrule=0pt,left=12pt,right=12pt,top=12pt,bottom=12pt]
+  \\begin{minipage}[c]{0.14\\linewidth}
+    \\includegraphics[width=\\linewidth]{logo-mariene.png}
+  \\end{minipage}
+  \\hfill
+  \\begin{minipage}[c]{0.8\\linewidth}
+    {\\Huge\\bfseries\\textcolor{brandblue}{Rapport MarianneAI}}\\par
+    {\\large\\textcolor{brandred}{Analyse sourcée et prête pour la démo}}\\par
+    {\\small Généré le ${generatedAt}}
+  \\end{minipage}
+\\end{tcolorbox}
 
-\\vspace{10pt}
-{\\color{brandblue}\\rule{\\linewidth}{1.4pt}}
-\\vspace{10pt}
+\\vspace{12pt}
 
 ${fragment}
 
@@ -302,6 +388,76 @@ function normalizeText(value: string): string {
     .replace(/[^\u0009\u000A\u000D\u0020-\u00FF]/g, '');
 }
 
+function escapeUrl(value: string): string {
+  return normalizeText(value)
+    .replace(/\\/g, '/')
+    .replace(/%/g, '\\%')
+    .replace(/#/g, '\\#')
+    .replace(/{/g, '\\{')
+    .replace(/}/g, '\\}');
+}
+
+function formatMetric(value: number | null | undefined): string {
+  if (value === null || value === undefined) {
+    return 'N/A';
+  }
+  return new Intl.NumberFormat('fr-FR').format(value);
+}
+
+function formatDecimal(value: number | null | undefined): string {
+  if (value === null || value === undefined || Number.isNaN(value)) {
+    return 'N/A';
+  }
+  return new Intl.NumberFormat('fr-FR', {
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 2,
+  }).format(value);
+}
+
+function buildStatisticsTable(report: QueryResponse): string {
+  const rows = report.descriptive_statistics
+    .slice(0, 6)
+    .map((item) => {
+      return `${escapeLatex(item.column)} & ${escapeLatex(formatDecimal(item.mean))} & ${escapeLatex(formatDecimal(item.median))} & ${escapeLatex(formatDecimal(item.min))} & ${escapeLatex(formatDecimal(item.max))} \\\\`;
+    })
+    .join('\n');
+
+  return [
+    '\\begin{tcolorbox}[colback=white,colframe=brandblue!12,arc=5pt,boxrule=0.4pt]',
+    '\\small',
+    '\\begin{tabularx}{\\linewidth}{>{\\raggedright\\arraybackslash}X>{\\raggedleft\\arraybackslash}p{0.15\\linewidth}>{\\raggedleft\\arraybackslash}p{0.15\\linewidth}>{\\raggedleft\\arraybackslash}p{0.15\\linewidth}>{\\raggedleft\\arraybackslash}p{0.15\\linewidth}}',
+    '\\toprule',
+    '\\textbf{Colonne} & \\textbf{Moy.} & \\textbf{Méd.} & \\textbf{Min} & \\textbf{Max}\\\\',
+    '\\midrule',
+    rows,
+    '\\bottomrule',
+    '\\end{tabularx}',
+    '\\end{tcolorbox}',
+  ].join('\n');
+}
+
+function buildRegressionsTable(report: QueryResponse): string {
+  const rows = report.regressions
+    .slice(0, 4)
+    .map((item) => {
+      return `${escapeLatex(item.feature_y)} / ${escapeLatex(item.feature_x)} & ${escapeLatex(formatDecimal(item.slope))} & ${escapeLatex(formatDecimal(item.intercept))} & ${escapeLatex(formatDecimal(item.r_squared))} \\\\`;
+    })
+    .join('\n');
+
+  return [
+    '\\begin{tcolorbox}[colback=white,colframe=brandred!18,arc=5pt,boxrule=0.4pt]',
+    '\\small',
+    '\\begin{tabularx}{\\linewidth}{>{\\raggedright\\arraybackslash}X>{\\raggedleft\\arraybackslash}p{0.16\\linewidth}>{\\raggedleft\\arraybackslash}p{0.16\\linewidth}>{\\raggedleft\\arraybackslash}p{0.16\\linewidth}}',
+    '\\toprule',
+    '\\textbf{Variables} & \\textbf{Pente} & \\textbf{Intercept} & \\textbf{R²}\\\\',
+    '\\midrule',
+    rows,
+    '\\bottomrule',
+    '\\end{tabularx}',
+    '\\end{tcolorbox}',
+  ].join('\n');
+}
+
 function buildPdfFileName(): string {
   const fileDate = new Intl.DateTimeFormat('fr-CA', {
     year: 'numeric',
@@ -314,21 +470,25 @@ function buildPdfFileName(): string {
 
 async function runPdflatex(cwd: string, texFileName: string): Promise<void> {
   await new Promise<void>((resolve, reject) => {
-    const process = spawn('pdflatex', ['-interaction=nonstopmode', '-halt-on-error', texFileName], {
+    const child = spawn('pdflatex', ['-interaction=nonstopmode', '-halt-on-error', texFileName], {
       cwd,
       stdio: ['ignore', 'pipe', 'pipe'],
     });
     let output = '';
 
-    process.stdout.on('data', (chunk) => {
+    child.stdout.on('data', (chunk) => {
       output += chunk.toString();
     });
 
-    process.stderr.on('data', (chunk) => {
+    child.stderr.on('data', (chunk) => {
       output += chunk.toString();
     });
 
-    process.on('close', (code) => {
+    child.on('error', (error) => {
+      reject(new Error(`pdflatex is unavailable: ${error.message}`));
+    });
+
+    child.on('close', (code) => {
       if (code === 0) {
         resolve();
         return;

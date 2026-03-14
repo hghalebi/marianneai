@@ -1,7 +1,7 @@
 import {HttpClient, HttpResponse} from '@angular/common/http';
 import {Injectable, inject, signal} from '@angular/core';
-import {Observable, catchError, of, tap} from 'rxjs';
-import {QueryResponse} from './report.types';
+import {Observable, catchError, map, of, tap} from 'rxjs';
+import {QueryResponse, ReportArtifact} from './report.types';
 
 export interface ScenariosResponse {
   scenarios: string[];
@@ -18,11 +18,12 @@ export class ApiService {
 
   query(text: string): Observable<QueryResponse> {
     return this.http.post<QueryResponse>(this.queryEndpoint, {query: text}).pipe(
+      map((response) => this.normalizeQueryResponse(response)),
       tap(() => this.isMockMode.set(false)),
       catchError((err) => {
         this.isMockMode.set(true);
         console.warn('API call failed (CORS/Mixed Content or Offline). Using mock data.', err.message);
-        return of({
+        return of(this.normalizeQueryResponse({
           user_query: text,
           selected_sources: [
             {
@@ -38,6 +39,78 @@ export class ApiService {
           limitations: [
             "Le jeu de données ne couvre que les bornes publiques, les bornes résidentielles privées n'y figurent pas."
           ],
+          analysis_engine: 'mock-demo',
+          analysis_summary:
+            "Analyse de démonstration générée localement à partir d'un scénario mock pour garder l'interface fonctionnelle.",
+          key_findings: [
+            "Le backend a identifié un jeu de données officiel pertinent sur les bornes de recharge.",
+            "Un rapport PDF et un rapport Excel peuvent être proposés dans l'expérience réelle.",
+          ],
+          data_coverage: 'Couverture estimative France entière, données publiques, détails indisponibles en mode mock.',
+          dataset_row_count: 2500,
+          dataset_columns: ['date', 'region', 'stations', 'charge_points'],
+          descriptive_statistics: [
+            {
+              column: 'charge_points',
+              non_null_count: 2500,
+              mean: 12.8,
+              min: 1,
+              max: 48,
+              median: 8,
+              stddev: 7.1,
+            },
+          ],
+          regressions: [
+            {
+              feature_x: 'stations',
+              feature_y: 'charge_points',
+              slope: 2.31,
+              intercept: 0.42,
+              r_squared: 0.91,
+              sample_size: 2500,
+            },
+          ],
+          charts: [
+            {
+              chart_id: 'mock-time-series',
+              title: 'Points de charge dans le temps',
+              chart_type: 'line',
+              description: 'Evolution simulée du nombre moyen de points de charge.',
+              x_key: 'date',
+              y_keys: ['charge_points'],
+              data: [
+                {date: '2025-01-01', charge_points: 9},
+                {date: '2025-03-01', charge_points: 11},
+                {date: '2025-06-01', charge_points: 13},
+                {date: '2025-09-01', charge_points: 14},
+                {date: '2025-12-01', charge_points: 16},
+              ],
+            },
+          ],
+          used_resources: [
+            {
+              dataset_title: 'Fichier consolidé des bornes de recharge (IRVE)',
+              resource_title: 'irve-national-summary.csv',
+              resource_url: '/api/demo/scenarios',
+              format: 'csv',
+            },
+          ],
+          report_artifacts: [
+            {
+              report_id: 'mock-report',
+              format: 'pdf',
+              filename: 'analysis-report.pdf',
+              download_url: '/api/report/pdf',
+              content_type: 'application/pdf',
+            },
+            {
+              report_id: 'mock-report',
+              format: 'xlsx',
+              filename: 'analysis-report.xlsx',
+              download_url: '',
+              content_type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+            },
+          ],
           trace: [
             'Analyse de la demande utilisateur.',
             'Orchestrateur : préparation de la recherche.',
@@ -47,7 +120,7 @@ export class ApiService {
             'Synthèse de la réponse finale.',
             'Rapport prêt.'
           ]
-        });
+        }));
       })
     );
   }
@@ -74,5 +147,47 @@ export class ApiService {
       observe: 'response',
       responseType: 'blob',
     });
+  }
+
+  downloadReportArtifact(artifact: ReportArtifact): Observable<HttpResponse<Blob>> {
+    return this.http.get(artifact.download_url, {
+      observe: 'response',
+      responseType: 'blob',
+    });
+  }
+
+  private normalizeQueryResponse(response: QueryResponse): QueryResponse {
+    const reportArtifacts = (response.report_artifacts ?? []).map((artifact) => ({
+      ...artifact,
+      download_url: this.normalizeDownloadUrl(artifact.download_url),
+    }));
+
+    return {
+      ...response,
+      analysis_engine: response.analysis_engine ?? 'unknown',
+      analysis_summary: response.analysis_summary ?? '',
+      key_findings: response.key_findings ?? [],
+      data_coverage: response.data_coverage ?? '',
+      dataset_row_count: response.dataset_row_count ?? null,
+      dataset_columns: response.dataset_columns ?? [],
+      descriptive_statistics: response.descriptive_statistics ?? [],
+      regressions: response.regressions ?? [],
+      charts: response.charts ?? [],
+      used_resources: response.used_resources ?? [],
+      report_artifacts: reportArtifacts,
+    };
+  }
+
+  private normalizeDownloadUrl(downloadUrl: string): string {
+    if (!downloadUrl) {
+      return '';
+    }
+    if (downloadUrl.startsWith('/api/')) {
+      return downloadUrl;
+    }
+    if (downloadUrl.startsWith('/')) {
+      return `/api${downloadUrl}`;
+    }
+    return `/api/${downloadUrl}`;
   }
 }

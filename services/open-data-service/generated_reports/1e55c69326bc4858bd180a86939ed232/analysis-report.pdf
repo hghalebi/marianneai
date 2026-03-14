@@ -1,0 +1,93 @@
+%PDF-1.4
+1 0 obj << /Type /Catalog /Pages 2 0 R >> endobj
+2 0 obj << /Type /Pages /Kids [3 0 R] /Count 1 >> endobj
+3 0 obj << /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Contents 4 0 R /Resources << /Font << /F1 5 0 R >> >> >> endobj
+4 0 obj << /Length 3638 >> stream
+BT
+/F1 11 Tf
+50 790 Td
+14 TL
+(DataGouv Alive Expert Report) Tj
+T*
+() Tj
+T*
+(User query: What are the latest official datasets about electric vehicle charging stations in France?) Tj
+T*
+() Tj
+T*
+(Analysis engine: heuristic-local) Tj
+T*
+() Tj
+T*
+(Executive answer: The latest official dataset identified for electric vehicle charging stations is "Belib' - Points de recharge pour véhicules électriques - Disponibilité temps réel", provided by the City of Paris. This dataset offers real-time availability information for charging points within Paris, with the latest update visible in the analyzed sample being 2025-09-25. It contains 2182 rows of data, covering a time span from 2022-06-13 to 2025-09-25. The charging point statuses observed include "Disponible" \(1113 points\), "Occupé \(en charge\)" \(845 points\), "Inconnu" \(161 points\), "En maintenance" \(50 points\), and "Mise en service planifiée" \(13 points\).) Tj
+T*
+() Tj
+T*
+(Analysis summary: The backend analyzed 1 resource\(s\) to answer: 'What are the latest official datasets about electric vehicle charging stations in France?' using heuristic-local. Main analytical signal: Belib' - Points de recharge pour véhicules électriques - Disponibilité temps réel contains 20 sampled charging points from a live operational feed.) Tj
+T*
+() Tj
+T*
+(Key findings:) Tj
+T*
+(- Belib' - Points de recharge pour véhicules électriques - Disponibilité temps réel contains 20 sampled charging points from a live operational feed.) Tj
+T*
+(- The full live resource exposes 2182 rows through the tabular API.) Tj
+T*
+(- The sample includes 20 distinct charging point identifiers.) Tj
+T*
+(- Observed charging-point statuses in the sample include Disponible, Inconnu, Occupé \(en charge\).) Tj
+T*
+(- The sample spans locations such as 2 Rue Duroc 75007 Paris, 1 Rue Fernand Labori 75018 Paris.) Tj
+T*
+(- The latest update visible in the analyzed sample is 2025-09-25.) Tj
+T*
+(- Belib' - Points de recharge pour véhicules électriques - Disponibilité temps réel / belib-points-de-recharge-pour-vehicules-electriques-disponibilite-temps-reel.csv analyzed 2182 row\(s\).) Tj
+T*
+(- 1 frontend-ready chart payload\(s\) were generated for direct rendering.) Tj
+T*
+() Tj
+T*
+(Charts prepared for frontend:) Tj
+T*
+(- Count by Statut du point de recharge \(bar\)) Tj
+T*
+() Tj
+T*
+(Selected sources:) Tj
+T*
+(- Belib' - Points de recharge pour véhicules électriques - Disponibilité temps réel | https://www.data.gouv.fr/datasets/belib-points-de-recharge-pour-vehicules-electriques-disponibilite-temps-reel) Tj
+T*
+(- Bornes de Recharge pour Véhicules Électriques - IRVE | https://www.data.gouv.fr/datasets/bornes-de-recharge-pour-vehicules-electriques-irve) Tj
+T*
+() Tj
+T*
+(Data coverage:) Tj
+T*
+(Belib' - Points de recharge pour véhicules électriques - Disponibilité temps réel: 2182 row\(s\) analyzed, time coverage 2022-06-13 to 2025-09-25, 5 distinct values for Statut du point de recharge) Tj
+T*
+() Tj
+T*
+(Limitations:) Tj
+T*
+(- No supported resource was found or analyzed for the "Bornes de Recharge pour Véhicules Électriques - IRVE" dataset, which covers the Hauts-de-France region. Therefore, no specific findings or details can be provided for this dataset.) Tj
+T*
+(- The provided analysis is limited to the Belib' dataset, which specifically covers charging stations within the City of Paris, and does not provide a comprehensive view of all official datasets across France.) Tj
+T*
+(- No statistically meaningful linear regression was available from the detected numeric columns.) Tj
+T*
+(- No supported resource was found for dataset 'Bornes de Recharge pour Véhicules Électriques - IRVE'.) Tj
+ET
+endstream endobj
+5 0 obj << /Type /Font /Subtype /Type1 /BaseFont /Helvetica >> endobj
+xref
+0 6
+0000000000 65535 f 
+0000000009 00000 n 
+0000000058 00000 n 
+0000000115 00000 n 
+0000000241 00000 n 
+0000003931 00000 n 
+trailer << /Size 6 /Root 1 0 R >>
+startxref
+4001
+%%EOF

@@ -1,5 +1,6 @@
 import json
 import math
+import re
 import statistics
 from collections import Counter, defaultdict
 from datetime import datetime
@@ -217,6 +218,9 @@ class CodeInterpreterAnalyticsService:
                 continue
             values = [str(row.get(column)).strip() for row in rows if row.get(column) not in (None, "")]
             distinct = {value for value in values if value}
+            average_length = sum(len(value) for value in distinct) / max(1, len(distinct))
+            if average_length > 40:
+                continue
             if 1 < len(distinct) <= min(20, max(3, len(rows))):
                 categorical_columns.append(column)
         return categorical_columns[:6]
@@ -327,9 +331,9 @@ class CodeInterpreterAnalyticsService:
                 charts.append(
                     AnalyticsChart(
                         chart_id=f"time-series-{self._slugify(date_column)}-{self._slugify(numeric_column)}",
-                        title=f"{numeric_column} over time",
+                        title=f"{self._display_label(numeric_column)} over time",
                         chart_type="line",
-                        description=f"Average {numeric_column} grouped by {date_column}.",
+                        description=f"Average {self._display_label(numeric_column)} grouped by {self._display_label(date_column)}.",
                         x_key="date",
                         y_keys=[numeric_column],
                         data=data[:60],
@@ -351,9 +355,9 @@ class CodeInterpreterAnalyticsService:
                     charts.append(
                         AnalyticsChart(
                             chart_id=f"bar-{self._slugify(category_column)}-{self._slugify(numeric_column)}",
-                            title=f"{numeric_column} by {category_column}",
+                            title=f"{self._display_label(numeric_column)} by {self._display_label(category_column)}",
                             chart_type="bar",
-                            description=f"Aggregated {numeric_column} by {category_column}.",
+                            description=f"Aggregated {self._display_label(numeric_column)} by {self._display_label(category_column)}.",
                             x_key=category_column,
                             y_keys=[numeric_column],
                             data=[{category_column: key, numeric_column: round(value, 4)} for key, value in top_values],
@@ -365,9 +369,9 @@ class CodeInterpreterAnalyticsService:
                     charts.append(
                         AnalyticsChart(
                             chart_id=f"count-{self._slugify(category_column)}",
-                            title=f"Count by {category_column}",
+                            title=f"Count by {self._display_label(category_column)}",
                             chart_type="bar",
-                            description=f"Record counts by {category_column}.",
+                            description=f"Record counts by {self._display_label(category_column)}.",
                             x_key=category_column,
                             y_keys=["count"],
                             data=[{category_column: key, "count": value} for key, value in counts.most_common(10)],
@@ -387,9 +391,9 @@ class CodeInterpreterAnalyticsService:
                 charts.append(
                     AnalyticsChart(
                         chart_id=f"scatter-{self._slugify(x_column)}-{self._slugify(y_column)}",
-                        title=f"{y_column} vs {x_column}",
+                        title=f"{self._display_label(y_column)} vs {self._display_label(x_column)}",
                         chart_type="scatter",
-                        description=f"Scatter plot of {y_column} against {x_column}.",
+                        description=f"Scatter plot of {self._display_label(y_column)} against {self._display_label(x_column)}.",
                         x_key=x_column,
                         y_keys=[y_column],
                         data=scatter_rows[:200],
@@ -467,7 +471,7 @@ class CodeInterpreterAnalyticsService:
             top_stat = descriptive_statistics[0]
             if top_stat.mean is not None:
                 findings.append(
-                    f"The numeric column '{top_stat.column}' has mean {top_stat.mean}, median {top_stat.median}, and range {top_stat.min} to {top_stat.max}."
+                    f"The numeric column '{self._display_label(top_stat.column)}' has mean {top_stat.mean}, median {top_stat.median}, and range {top_stat.min} to {top_stat.max}."
                 )
         if regressions:
             strongest = regressions[0]
@@ -498,7 +502,7 @@ class CodeInterpreterAnalyticsService:
         if categorical_columns:
             categories = {str(row.get(categorical_columns[0], "")).strip() for row in rows if row.get(categorical_columns[0])}
             if categories:
-                parts.append(f"{len(categories)} distinct values for {categorical_columns[0]}")
+                parts.append(f"{len(categories)} distinct values for {self._display_label(categorical_columns[0])}")
         return ", ".join(parts)
 
     def _to_float(self, value: Any) -> float | None:
@@ -520,6 +524,8 @@ class CodeInterpreterAnalyticsService:
         return None
 
     def _parse_date(self, value: Any) -> datetime | None:
+        if isinstance(value, (int, float)) and 1800 <= int(value) <= 2200:
+            return datetime.strptime(str(int(value)), "%Y")
         if not isinstance(value, str):
             return None
         cleaned = value.strip().replace("Z", "+00:00")
@@ -528,6 +534,12 @@ class CodeInterpreterAnalyticsService:
         candidates = [cleaned, cleaned[:10]]
         for candidate in candidates:
             try:
+                if re.fullmatch(r"\d{4}", candidate):
+                    return datetime.strptime(candidate, "%Y")
+                if re.fullmatch(r"\d{4}-\d{2}", candidate):
+                    return datetime.strptime(candidate, "%Y-%m")
+                if re.fullmatch(r"\d{2}/\d{2}/\d{4}", candidate):
+                    return datetime.strptime(candidate, "%d/%m/%Y")
                 if len(candidate) == 10:
                     return datetime.strptime(candidate, "%Y-%m-%d")
                 return datetime.fromisoformat(candidate)
@@ -540,3 +552,8 @@ class CodeInterpreterAnalyticsService:
         while "--" in cleaned:
             cleaned = cleaned.replace("--", "-")
         return cleaned.strip("-") or "value"
+
+    def _display_label(self, value: str) -> str:
+        text = value.replace("\ufeff", "").strip()
+        text = re.sub(r"\s+", " ", text)
+        return text[:80] + "..." if len(text) > 80 else text

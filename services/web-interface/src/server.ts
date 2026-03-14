@@ -33,7 +33,37 @@ app.post('/api/report/pdf', async (req, res) => {
     res.status(200).send(result.pdfBuffer);
   } catch (error) {
     console.error('Styled PDF generation failed', error);
-    res.status(500).json({error: 'PDF generation failed'});
+    const backendArtifact = report.report_artifacts?.find(
+      (artifact) => artifact.format === 'pdf' && !!artifact.download_url,
+    );
+    const backendUrl = process.env['BACKEND_URL'];
+
+    if (!backendArtifact?.download_url || !backendUrl) {
+      res.status(500).json({error: 'PDF generation failed'});
+      return;
+    }
+
+    try {
+      const targetUrl = new URL(
+        backendArtifact.download_url.replace(/^\//, ''),
+        backendUrl.endsWith('/') ? backendUrl : `${backendUrl}/`,
+      );
+      const response = await fetch(targetUrl);
+      if (!response.ok) {
+        throw new Error(`Backend PDF fallback failed with status ${response.status}`);
+      }
+      const payload = Buffer.from(await response.arrayBuffer());
+      res.setHeader('content-type', response.headers.get('content-type') || 'application/pdf');
+      res.setHeader(
+        'content-disposition',
+        response.headers.get('content-disposition') || `attachment; filename="${backendArtifact.filename}"`,
+      );
+      res.setHeader('x-pdf-source', 'backend-fallback');
+      res.status(200).send(payload);
+    } catch (fallbackError) {
+      console.error('Backend PDF fallback failed', fallbackError);
+      res.status(500).json({error: 'PDF generation failed'});
+    }
   }
 });
 
@@ -76,13 +106,24 @@ app.all('/api/{*proxyPath}', async (req, res) => {
           ? undefined
           : JSON.stringify(req.body),
     });
-    const responseContentType = response.headers.get('content-type');
+    const passthroughHeaders = [
+      'content-type',
+      'content-disposition',
+      'content-length',
+      'cache-control',
+      'etag',
+      'last-modified',
+    ];
 
-    if (responseContentType) {
-      res.setHeader('content-type', responseContentType);
+    for (const headerName of passthroughHeaders) {
+      const headerValue = response.headers.get(headerName);
+      if (headerValue) {
+        res.setHeader(headerName, headerValue);
+      }
     }
 
-    res.status(response.status).send(await response.text());
+    const payload = Buffer.from(await response.arrayBuffer());
+    res.status(response.status).send(payload);
   } catch (error) {
     console.error('Error while proxying backend request', error);
     res.status(502).json({error: 'Backend request failed'});

@@ -263,6 +263,52 @@ class DataAnalysisService:
 
     def _water_findings(self, dataset_title: str, sample: ResourceSample) -> list[str]:
         rows = sample.rows
+        if not rows:
+            return [f"{dataset_title} did not expose analyzable water rows in the profiled resource."]
+
+        columns = list(rows[0].keys())
+        year_key = self._find_column(columns, ["annee"]) or self._find_column(columns, ["year"])
+        total_key = (
+            self._find_column(columns, ["total", "prelevements", "millions", "m3"])
+            or self._find_column(columns, ["total", "prelevements", "eau", "m3"])
+        )
+        potable_key = self._find_column(columns, ["potable", "millions", "m3"], exclude_tokens=["non"]) or self._find_column(columns, ["potable"], exclude_tokens=["non"])
+        non_potable_key = (
+            self._find_column(columns, ["non", "potable", "million", "m3"])
+            or self._find_column(columns, ["non", "potable", "millions", "m3"])
+            or self._find_column(columns, ["non", "potable"], exclude_tokens=["total"])
+        )
+        evolution_key = self._find_column(columns, ["evolution", "2016"]) or self._find_column(columns, ["evolution"])
+
+        if year_key and total_key:
+            sorted_rows = sorted(rows, key=lambda row: self._as_number(row.get(year_key)))
+            latest_row = sorted_rows[-1]
+            earliest_row = sorted_rows[0]
+            latest_year = int(self._as_number(latest_row.get(year_key)))
+            earliest_year = int(self._as_number(earliest_row.get(year_key)))
+            total_values = [self._as_number(row.get(total_key)) for row in rows if row.get(total_key) not in (None, "")]
+            findings = [
+                f"{dataset_title} provides {len(rows)} annual observations from {earliest_year} to {latest_year} in the analyzed resource.",
+                f"The latest visible total water withdrawals are {self._as_number(latest_row.get(total_key)):.1f} million m3 for {latest_year}.",
+            ]
+            if potable_key:
+                findings.append(
+                    f"Potable-water withdrawals reach {self._as_number(latest_row.get(potable_key)):.1f} million m3 in the latest visible year."
+                )
+            if non_potable_key:
+                findings.append(
+                    f"Non-potable withdrawals reach {self._as_number(latest_row.get(non_potable_key)):.1f} million m3 in the latest visible year."
+                )
+            if evolution_key:
+                findings.append(
+                    f"The dataset reports a change of {self._as_number(latest_row.get(evolution_key)):.1f} relative to its baseline indicator."
+                )
+            if total_values:
+                findings.append(
+                    f"Across the analyzed series, average total withdrawals are {statistics.mean(total_values):.1f} million m3."
+                )
+            return findings
+
         compliance_values = [self._as_number(row.get("compliance_rate")) for row in rows if row.get("compliance_rate") is not None]
         measurements = sum(self._as_number(row.get("samples")) for row in rows)
         findings = [f"{dataset_title} includes {int(measurements)} analyzed samples in the profiled resource."]
@@ -492,6 +538,8 @@ class DataAnalysisService:
         return sorted(parsed_dates)
 
     def _parse_date(self, value: Any) -> datetime | None:
+        if isinstance(value, (int, float)) and 1800 <= int(value) <= 2200:
+            return datetime.strptime(str(int(value)), "%Y")
         if not isinstance(value, str):
             return None
         text = value.strip()
@@ -500,11 +548,26 @@ class DataAnalysisService:
         normalized = text.replace("Z", "+00:00")
         for candidate in (normalized, normalized[:10]):
             try:
+                if len(candidate) == 4 and candidate.isdigit():
+                    return datetime.strptime(candidate, "%Y")
+                if len(candidate) == 7 and candidate[4] == "-":
+                    return datetime.strptime(candidate, "%Y-%m")
+                if len(candidate) == 10 and "/" in candidate:
+                    return datetime.strptime(candidate, "%d/%m/%Y")
                 if len(candidate) == 10:
                     return datetime.strptime(candidate, "%Y-%m-%d")
                 return datetime.fromisoformat(candidate)
             except ValueError:
                 continue
+        return None
+
+    def _find_column(self, columns: list[str], tokens: list[str], exclude_tokens: list[str] | None = None) -> str | None:
+        for column in columns:
+            normalized = self._normalize_label(column)
+            if all(token in normalized for token in tokens) and not any(
+                excluded in normalized for excluded in (exclude_tokens or [])
+            ):
+                return column
         return None
 
     def _distinct_values(self, rows: list[dict[str, Any]], keys: list[str]) -> list[str]:

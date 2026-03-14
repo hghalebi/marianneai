@@ -1,0 +1,111 @@
+%PDF-1.4
+1 0 obj << /Type /Catalog /Pages 2 0 R >> endobj
+2 0 obj << /Type /Pages /Kids [3 0 R] /Count 1 >> endobj
+3 0 obj << /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Contents 4 0 R /Resources << /Font << /F1 5 0 R >> >> >> endobj
+4 0 obj << /Length 3569 >> stream
+BT
+/F1 11 Tf
+50 790 Td
+14 TL
+(DataGouv Alive Expert Report) Tj
+T*
+() Tj
+T*
+(User query: Find official data about water quality in Paris.) Tj
+T*
+() Tj
+T*
+(Analysis engine: heuristic-local) Tj
+T*
+() Tj
+T*
+(Executive answer: As a data analysis grounded in the selected data.gouv.fr resources, the strongest match for 'Find official data about water quality in Paris.' is 'Eau - Évolution des prélèvements en eau pour les besoins du territoire parisien'. Eau - Évolution des prélèvements en eau pour les besoins du territoire parisien provides 10 annual observations from 2016 to 2025 in the analyzed resource.) Tj
+T*
+() Tj
+T*
+(Analysis summary: The backend analyzed 1 resource\(s\) to answer: 'Find official data about water quality in Paris.' using heuristic-local. Main analytical signal: Eau - Évolution des prélèvements en eau pour les besoins du territoire parisien provides 10 annual observations from 2016 to 2025 in the analyzed resource.) Tj
+T*
+() Tj
+T*
+(Key findings:) Tj
+T*
+(- Eau - Évolution des prélèvements en eau pour les besoins du territoire parisien provides 10 annual observations from 2016 to 2025 in the analyzed resource.) Tj
+T*
+(- The latest visible total water withdrawals are 265.4 million m3 for 2025.) Tj
+T*
+(- Potable-water withdrawals reach 193.5 million m3 in the latest visible year.) Tj
+T*
+(- Non-potable withdrawals reach 71.9 million m3 in the latest visible year.) Tj
+T*
+(- The dataset reports a change of -16600000.0 relative to its baseline indicator.) Tj
+T*
+(- Across the analyzed series, average total withdrawals are 268.7 million m3.) Tj
+T*
+(- Eau - Évolution des prélèvements en eau pour les besoins du territoire parisien / eau-evolution-des-prelevements-en-eau-pour-les-besoins-du-territoire-parisien.csv analyzed 10 row\(s\).) Tj
+T*
+(- The numeric column 'Total prélèvements millions m3' has mean 268.72, median 266.55, and range 255.4 to 284.0.) Tj
+T*
+() Tj
+T*
+(Descriptive statistics:) Tj
+T*
+(- Total prélèvements millions m3: mean=268.72, median=266.55, min=255.4, max=284.0) Tj
+T*
+(- Total des prélèvements eau en m3: mean=268720000.0, median=266550000.0, min=255400000.0, max=284000000.0) Tj
+T*
+(- Prélèvements eau potable millions m3: mean=192.35, median=191.75, min=178.0, max=209.0) Tj
+T*
+(- Prélèvements eau potable: mean=192350000.0, median=191750000.0, min=178000000.0, max=209000000.0) Tj
+T*
+() Tj
+T*
+(Linear regressions:) Tj
+T*
+(- Total des prélèvements eau en m3 vs Total prélèvements millions m3: slope=1000000.0, r2=1.0) Tj
+T*
+(- Total prélèvements millions m3 vs Total des prélèvements eau en m3: slope=1e-06, r2=1.0) Tj
+T*
+(- Prélèvements eau potable vs Prélèvements eau potable millions m3: slope=1000000.0, r2=1.0) Tj
+T*
+() Tj
+T*
+(Charts prepared for frontend:) Tj
+T*
+(- Total prélèvements millions m3 over time \(line\)) Tj
+T*
+(- Total des prélèvements eau en m3 vs Total prélèvements millions m3 \(scatter\)) Tj
+T*
+() Tj
+T*
+(Selected sources:) Tj
+T*
+(- Eau - Évolution des prélèvements en eau pour les besoins du territoire parisien | https://www.data.gouv.fr/datasets/eau-evolution-des-prelevements-en-eau-pour-les-besoins-du-territoire-parisien) Tj
+T*
+() Tj
+T*
+(Data coverage:) Tj
+T*
+(Eau - Évolution des prélèvements en eau pour les besoins du territoire parisien: 10 row\(s\) analyzed, time coverage 2016-01-01 to 2025-01-01) Tj
+T*
+() Tj
+T*
+(Limitations:) Tj
+T*
+(- This answer is grounded only in the selected sources and analyzed resources returned by the retrieval step.) Tj
+T*
+(- Some findings are based on resource samples and may need broader dataset inspection for exhaustive conclusions.) Tj
+ET
+endstream endobj
+5 0 obj << /Type /Font /Subtype /Type1 /BaseFont /Helvetica >> endobj
+xref
+0 6
+0000000000 65535 f 
+0000000009 00000 n 
+0000000058 00000 n 
+0000000115 00000 n 
+0000000241 00000 n 
+0000003862 00000 n 
+trailer << /Size 6 /Root 1 0 R >>
+startxref
+3932
+%%EOF

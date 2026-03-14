@@ -3,7 +3,7 @@ import {ChangeDetectionStrategy, Component, inject, OnInit, PLATFORM_ID, signal}
 import {FormsModule} from '@angular/forms';
 import {firstValueFrom} from 'rxjs';
 import {ApiService} from './api.service';
-import {QueryResponse} from './report.types';
+import {AnalyticsChart, QueryResponse, ReportArtifact} from './report.types';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -19,6 +19,7 @@ export class App implements OnInit {
   queryText = signal('');
   isLoading = signal(false);
   isDownloadingPdf = signal(false);
+  downloadingArtifact = signal<string | null>(null);
   pdfErrorMessage = signal<string | null>(null);
   response = signal<QueryResponse | null>(null);
   scenarios = signal<string[]>([]);
@@ -99,10 +100,221 @@ export class App implements OnInit {
       window.URL.revokeObjectURL(objectUrl);
     } catch (error) {
       console.error('Styled PDF generation failed', error);
-      this.pdfErrorMessage.set('Impossible de générer le PDF stylé pour le moment.');
+      const fallbackPdf = this.getReportArtifact('pdf');
+      if (fallbackPdf?.download_url) {
+        this.pdfErrorMessage.set('Le PDF premium est indisponible sur cet environnement. Téléchargement du PDF backend à la place.');
+        await this.downloadArtifact(fallbackPdf);
+      } else {
+        this.pdfErrorMessage.set('Impossible de générer le PDF stylé pour le moment.');
+      }
     } finally {
       this.isDownloadingPdf.set(false);
     }
+  }
+
+  async downloadArtifact(artifact: ReportArtifact) {
+    if (!artifact.download_url || !isPlatformBrowser(this.platformId) || this.downloadingArtifact()) {
+      return;
+    }
+
+    this.downloadingArtifact.set(artifact.filename);
+    this.pdfErrorMessage.set(null);
+
+    try {
+      const response = await firstValueFrom(this.apiService.downloadReportArtifact(artifact));
+      const fileName = this.extractFileName(response.headers.get('content-disposition')) || artifact.filename;
+      const blob = response.body;
+
+      if (!blob) {
+        throw new Error('Fichier vide');
+      }
+
+      const objectUrl = window.URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = objectUrl;
+      link.download = fileName;
+      link.click();
+      window.URL.revokeObjectURL(objectUrl);
+    } catch (error) {
+      console.error('Artifact download failed', error);
+      this.pdfErrorMessage.set(`Impossible de télécharger ${artifact.filename} pour le moment.`);
+    } finally {
+      this.downloadingArtifact.set(null);
+    }
+  }
+
+  getReportArtifact(format: string): ReportArtifact | undefined {
+    return this.response()?.report_artifacts.find((artifact) => artifact.format === format);
+  }
+
+  hasBackendArtifact(format: string): boolean {
+    return !!this.getReportArtifact(format)?.download_url;
+  }
+
+  getTopColumns(limit = 12): string[] {
+    return (this.response()?.dataset_columns ?? []).slice(0, limit);
+  }
+
+  getCoverageLines(): string[] {
+    const coverage = this.response()?.data_coverage ?? '';
+    return coverage
+      .split('|')
+      .map((segment) => segment.trim())
+      .filter(Boolean);
+  }
+
+  getPrintTimestamp(): string {
+    return new Intl.DateTimeFormat('fr-FR', {
+      dateStyle: 'long',
+      timeStyle: 'short',
+    }).format(new Date());
+  }
+
+  formatFieldLabel(value: string | null | undefined, maxLength = 48): string {
+    if (!value) {
+      return 'N/A';
+    }
+    const normalized = value
+      .replace(/^\uFEFF/, '')
+      .replace(/[_;]+/g, ' ')
+      .replace(/\s+/g, ' ')
+      .trim();
+    if (!normalized) {
+      return 'N/A';
+    }
+    return normalized.length > maxLength ? `${normalized.slice(0, maxLength - 1)}…` : normalized;
+  }
+
+  getChartColumnHeaders(chart: AnalyticsChart): string[] {
+    return [chart.x_key, ...chart.y_keys];
+  }
+
+  getChartDataPreview(chart: AnalyticsChart): Array<Record<string, string | number | boolean | null>> {
+    const maxPoints = chart.chart_type === 'scatter' ? 80 : 12;
+    return chart.data.slice(0, maxPoints);
+  }
+
+  getChartDomain(values: number[]): {min: number; max: number} {
+    if (values.length === 0) {
+      return {min: 0, max: 1};
+    }
+    const min = Math.min(...values);
+    const max = Math.max(...values);
+    if (min === max) {
+      return {min: min - 1, max: max + 1};
+    }
+    return {min, max};
+  }
+
+  getLineChartPoints(chart: AnalyticsChart): string {
+    const yKey = chart.y_keys[0];
+    if (!yKey) {
+      return '';
+    }
+    const rows = this.getChartDataPreview(chart);
+    const values = rows
+      .map((row) => this.toNumber(row[yKey]))
+      .filter((value): value is number => value !== null);
+    if (rows.length === 0 || values.length === 0) {
+      return '';
+    }
+    const {min, max} = this.getChartDomain(values);
+    return rows
+      .map((row, index) => {
+        const value = this.toNumber(row[yKey]) ?? min;
+        const x = rows.length === 1 ? 20 : 20 + (index * 260) / (rows.length - 1);
+        const y = 120 - ((value - min) / (max - min || 1)) * 90;
+        return `${x},${y}`;
+      })
+      .join(' ');
+  }
+
+  getBarChartBars(chart: AnalyticsChart): Array<{x: number; y: number; width: number; height: number; label: string; value: number}> {
+    const yKey = chart.y_keys[0];
+    if (!yKey) {
+      return [];
+    }
+    const rows = this.getChartDataPreview(chart);
+    const values = rows
+      .map((row) => this.toNumber(row[yKey]))
+      .filter((value): value is number => value !== null);
+    if (rows.length === 0 || values.length === 0) {
+      return [];
+    }
+    const max = Math.max(...values, 1);
+    const width = Math.max(14, 220 / rows.length);
+    return rows.map((row, index) => {
+      const value = this.toNumber(row[yKey]) ?? 0;
+      const height = (value / max) * 90;
+      return {
+        x: 25 + index * (width + 8),
+        y: 120 - height,
+        width,
+        height,
+        label: String(row[chart.x_key] ?? `#${index + 1}`),
+        value,
+      };
+    });
+  }
+
+  getScatterChartPoints(chart: AnalyticsChart): Array<{cx: number; cy: number; label: string}> {
+    const yKey = chart.y_keys[0];
+    if (!yKey) {
+      return [];
+    }
+    const rows = this.getChartDataPreview(chart);
+    const xValues = rows.map((row) => this.toNumber(row[chart.x_key])).filter((value): value is number => value !== null);
+    const yValues = rows.map((row) => this.toNumber(row[yKey])).filter((value): value is number => value !== null);
+    if (rows.length === 0 || xValues.length === 0 || yValues.length === 0) {
+      return [];
+    }
+    const xDomain = this.getChartDomain(xValues);
+    const yDomain = this.getChartDomain(yValues);
+    return rows
+      .map((row) => {
+        const xValue = this.toNumber(row[chart.x_key]);
+        const yValue = this.toNumber(row[yKey]);
+        if (xValue === null || yValue === null) {
+          return null;
+        }
+        return {
+          cx: 20 + ((xValue - xDomain.min) / (xDomain.max - xDomain.min || 1)) * 260,
+          cy: 120 - ((yValue - yDomain.min) / (yDomain.max - yDomain.min || 1)) * 90,
+          label: `${this.formatFieldLabel(chart.x_key)}: ${xValue} | ${this.formatFieldLabel(yKey)}: ${yValue}`,
+        };
+      })
+      .filter((point): point is {cx: number; cy: number; label: string} => point !== null);
+  }
+
+  formatNumber(value: number | null | undefined): string {
+    if (value === null || value === undefined || Number.isNaN(value)) {
+      return 'N/A';
+    }
+    return new Intl.NumberFormat('fr-FR', {
+      maximumFractionDigits: Math.abs(value) >= 100 ? 0 : 2,
+    }).format(value);
+  }
+
+  formatPercent(value: number): string {
+    return new Intl.NumberFormat('fr-FR', {
+      style: 'percent',
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 1,
+    }).format(value);
+  }
+
+  private toNumber(value: string | number | boolean | null | undefined): number | null {
+    if (typeof value === 'number') {
+      return Number.isFinite(value) ? value : null;
+    }
+    if (typeof value === 'boolean') {
+      return value ? 1 : 0;
+    }
+    if (typeof value === 'string' && value.trim() !== '') {
+      const parsed = Number(value.replace(',', '.'));
+      return Number.isFinite(parsed) ? parsed : null;
+    }
+    return null;
   }
 
   private extractFileName(contentDisposition: string | null): string {

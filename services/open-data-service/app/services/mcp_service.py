@@ -3,7 +3,7 @@ import csv
 import io
 import json
 import re
-from typing import Any, Dict, List
+from typing import Any, Dict, List, Tuple
 
 import httpx
 
@@ -534,6 +534,11 @@ class MCPService:
                 return float(value)
             except ValueError:
                 return value
+        if re.fullmatch(r"-?\d+,\d+", value):
+            try:
+                return float(value.replace(",", "."))
+            except ValueError:
+                return value
         if value.startswith("[") and value.endswith("]"):
             try:
                 return json.loads(value)
@@ -710,7 +715,7 @@ class MCPService:
     def _parse_resource_content(self, resource_format: str, text: str) -> List[Dict[str, Any]]:
         fmt = resource_format.lower()
         if fmt == "csv":
-            return list(csv.DictReader(io.StringIO(text)))
+            return self._parse_csv_rows(text)
         if fmt in {"json", "geojson"}:
             payload = json.loads(text)
             if isinstance(payload, list):
@@ -722,12 +727,63 @@ class MCPService:
                     return [feature.get("properties", {}) for feature in payload["features"] if isinstance(feature, dict)]
         return []
 
+    def _parse_csv_rows(self, text: str) -> List[Dict[str, Any]]:
+        normalized_text = text.lstrip("\ufeff")
+        sample = normalized_text[: min(len(normalized_text), 8_192)]
+        candidate_specs: list[Tuple[str, csv.Dialect | None]] = []
+
+        try:
+            candidate_specs.append(("", csv.Sniffer().sniff(sample, delimiters=",;\t|")))
+        except csv.Error:
+            pass
+
+        candidate_specs.extend((delimiter, None) for delimiter in [",", ";", "\t", "|"])
+
+        best_rows: List[Dict[str, Any]] = []
+        best_field_count = 0
+        for delimiter, dialect in candidate_specs:
+            rows, field_count = self._read_csv_rows(normalized_text, delimiter=delimiter or ",", dialect=dialect)
+            if field_count > best_field_count and rows:
+                best_rows = rows
+                best_field_count = field_count
+            if field_count > 1 and rows:
+                return rows
+        return best_rows
+
+    def _read_csv_rows(
+        self,
+        text: str,
+        *,
+        delimiter: str,
+        dialect: csv.Dialect | None,
+    ) -> Tuple[List[Dict[str, Any]], int]:
+        buffer = io.StringIO(text)
+        if dialect is not None:
+            reader = csv.DictReader(buffer, dialect=dialect)
+        else:
+            reader = csv.DictReader(buffer, delimiter=delimiter, skipinitialspace=True)
+
+        field_count = len(reader.fieldnames or [])
+        parsed_rows: List[Dict[str, Any]] = []
+        for row in reader:
+            cleaned_row = {
+                self._clean_csv_key(key): self._coerce_text_value(value.strip()) if isinstance(value, str) else value
+                for key, value in row.items()
+                if key not in (None, "")
+            }
+            if any(value not in (None, "") for value in cleaned_row.values()):
+                parsed_rows.append(cleaned_row)
+        return parsed_rows, field_count
+
+    def _clean_csv_key(self, value: str) -> str:
+        return str(value).replace("\ufeff", "").strip()
+
     def _normalize_rows(self, rows: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
         normalized_rows: List[Dict[str, Any]] = []
         for row in rows:
             normalized_row: Dict[str, Any] = {}
             for key, value in row.items():
-                normalized_key = str(key).strip() if key not in (None, "") else "unnamed_column"
+                normalized_key = self._clean_csv_key(str(key)) if key not in (None, "") else "unnamed_column"
                 if normalized_key in normalized_row:
                     normalized_key = f"{normalized_key}_dup"
                 normalized_row[normalized_key] = value
@@ -737,10 +793,13 @@ class MCPService:
     def _extract_columns(self, rows: List[Dict[str, Any]]) -> List[str]:
         if not rows:
             return []
-        columns: set[str] = set()
+        columns: List[str] = []
         for row in rows[:50]:
-            columns.update(str(key) for key in row.keys())
-        return sorted(columns)
+            for key in row.keys():
+                normalized_key = str(key)
+                if normalized_key not in columns:
+                    columns.append(normalized_key)
+        return columns
 
     def _serialize_rows(self, resource_format: str, rows: List[Dict[str, Any]]) -> str:
         if not rows:

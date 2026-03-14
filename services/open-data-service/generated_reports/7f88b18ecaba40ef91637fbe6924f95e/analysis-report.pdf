@@ -1,0 +1,113 @@
+%PDF-1.4
+1 0 obj << /Type /Catalog /Pages 2 0 R >> endobj
+2 0 obj << /Type /Pages /Kids [3 0 R] /Count 1 >> endobj
+3 0 obj << /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Contents 4 0 R /Resources << /Font << /F1 5 0 R >> >> >> endobj
+4 0 obj << /Length 4594 >> stream
+BT
+/F1 11 Tf
+50 790 Td
+14 TL
+(DataGouv Alive Expert Report) Tj
+T*
+() Tj
+T*
+(User query: données éducation france) Tj
+T*
+() Tj
+T*
+(Analysis engine: heuristic-local) Tj
+T*
+() Tj
+T*
+(Executive answer: Data on education in France includes indicators of social segregation in middle schools and information on higher education applications via Parcoursup. The dataset "Indicateurs de ségrégation sociale entre collèges dans les départements" \(1452 rows analyzed, covering 2014-2024\) shows that the total number of middle schools \(`nb_coll_calcul`\) ranges from 8 to 6957, with a mean of 156.84 and a median of 69. Public middle schools \(`nb_coll_PU_calcul`\) constitute a significant portion, with a strong linear relationship \(R^2=0.999206\) to the total number of schools. The percentage of very favorable social categories \(`p_tfav`\) in all middle schools averages 21.08%, while in public middle schools \(`p_tfav_pu`\) it is 18.03%, and in private middle schools \(`p_tfav_pr`\) it is 35.61%. The average number of middle schools has remained relatively stable between 2014 and 2024, fluctuating around 156-158. For higher education, the "Parcoursup 2025" dataset contains 14252 records detailing student applications and institutional responses.) Tj
+T*
+() Tj
+T*
+(Analysis summary: The backend analyzed 2 resource\(s\) to answer: 'données éducation france' using heuristic-local. Main analytical signal: Indicateurs de ségrégation sociale entre collèges dans les départements includes 0 analyzed samples in the profiled resource.) Tj
+T*
+() Tj
+T*
+(Key findings:) Tj
+T*
+(- Indicateurs de ségrégation sociale entre collèges dans les départements includes 0 analyzed samples in the profiled resource.) Tj
+T*
+(- The latest control date visible in the analyzed sample is 2015-01-01.) Tj
+T*
+(- Indicateurs de ségrégation sociale entre collèges dans les départements / fr-en-indicateur_segregation_sociale_colleges.csv analyzed 1452 row\(s\).) Tj
+T*
+(- The numeric column 'nb_coll_calcul' has mean 156.8368, median 69.0, and range 8.0 to 6957.0.) Tj
+T*
+(- The strongest detected linear relationship is nb_coll_PU_calcul vs nb_coll_calcul with R^2=0.999206.) Tj
+T*
+(- 2 frontend-ready chart payload\(s\) were generated for direct rendering.) Tj
+T*
+(- Parcoursup 2025 - v?ux de poursuite d'études et de réorientation dans l'enseignement supérieur et réponses des établissements / fr-esr-parcoursup.csv contains 20 sampled records.) Tj
+T*
+(- The full resource exposes 14252 rows through the tabular API.) Tj
+T*
+() Tj
+T*
+(Descriptive statistics:) Tj
+T*
+(- nb_coll_calcul: mean=156.8368, median=69.0, min=8.0, max=6957.0) Tj
+T*
+(- nb_coll_PU_calcul: mean=119.5186, median=50.0, min=8.0, max=5304.0) Tj
+T*
+(- nb_coll_PR_calcul: mean=37.3182, median=14.0, min=0.0, max=1653.0) Tj
+T*
+(- p_tfav_pu: mean=18.0302, median=17.3, min=4.9, max=41.1) Tj
+T*
+() Tj
+T*
+(Linear regressions:) Tj
+T*
+(- nb_coll_PU_calcul vs nb_coll_calcul: slope=0.761446, r2=0.999206) Tj
+T*
+(- nb_coll_calcul vs nb_coll_PU_calcul: slope=1.312248, r2=0.999206) Tj
+T*
+(- nb_coll_PR_calcul vs nb_coll_calcul: slope=0.238554, r2=0.991967) Tj
+T*
+() Tj
+T*
+(Charts prepared for frontend:) Tj
+T*
+(- nb_coll_calcul over time \(line\)) Tj
+T*
+(- nb_coll_PU_calcul vs nb_coll_calcul \(scatter\)) Tj
+T*
+() Tj
+T*
+(Selected sources:) Tj
+T*
+(- Indicateurs de ségrégation sociale entre collèges dans les départements | https://www.data.gouv.fr/datasets/indicateurs-de-segregation-sociale-entre-colleges-dans-les-departements) Tj
+T*
+(- Parcoursup 2025 - v?ux de poursuite d'études et de réorientation dans l'enseignement supérieur et réponses des établissements | https://www.data.gouv.fr/datasets/parcoursup-2025-voeux-de-poursuite-detudes-et-de-reorientation-dans-lenseignement-superieur-et-reponses-des-etablissements-1) Tj
+T*
+(- Les établissements universitaires et établissements d'enseignement général supérieur privé | https://www.data.gouv.fr/datasets/les-etablissements-universitaires-et-etablissements-d-enseignement-general-superieur-prive-idf) Tj
+T*
+() Tj
+T*
+(Data coverage:) Tj
+T*
+(Indicateurs de ségrégation sociale entre collèges dans les départements: 1452 row\(s\) analyzed, time coverage 2014-01-01 to 2024-01-01 | Parcoursup 2025 - v?ux de poursuite d'études et de réorientation dans l'enseignement supérieur et réponses des établissements: 14252 row\(s\) analyzed) Tj
+T*
+() Tj
+T*
+(Limitations:) Tj
+T*
+(- The analysis of 'Indicateurs de ségrégation sociale entre collèges dans les départements' includes 0 analyzed samples in the profiled resource, despite 1452 rows being analyzed for descriptive statistics and regressions.) Tj
+ET
+endstream endobj
+5 0 obj << /Type /Font /Subtype /Type1 /BaseFont /Helvetica >> endobj
+xref
+0 6
+0000000000 65535 f 
+0000000009 00000 n 
+0000000058 00000 n 
+0000000115 00000 n 
+0000000241 00000 n 
+0000004887 00000 n 
+trailer << /Size 6 /Root 1 0 R >>
+startxref
+4957
+%%EOF
