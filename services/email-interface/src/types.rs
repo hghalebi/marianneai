@@ -4,8 +4,8 @@
 
 use chrono::{DateTime, Utc};
 use clap::ValueEnum;
-use serde::{Deserialize, Serialize};
 use serde::de::Deserializer;
+use serde::{Deserialize, Serialize};
 
 /// Supported queue persistence targets.
 #[derive(Debug, Clone, Copy, Serialize, Deserialize, ValueEnum, PartialEq, Eq, Default)]

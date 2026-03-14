@@ -84,29 +84,45 @@ Hints printed at startup include the exact `gws auth login --scopes ...` command
 ### Optional Datagouv MCP source
 
 ```bash
-export DATAGOUV_MCP_ENDPOINT="https://mcp.data.gouv.fr/mcp"
+export DATAGOUV_MCP_ENDPOINT="http://127.0.0.1:8000/mcp"
 export DATAGOUV_MCP_TOOL="search_datasets" # optional
 export DATAGOUV_MCP_TIMEOUT_SECONDS="30" # optional
 ```
 
+If `DATAGOUV_MCP_ENDPOINT` is not set, the service auto-detects a local Streamable MCP at
+`DATAGOUV_MCP_HOST:DATAGOUV_MCP_PORT` and defaults to `127.0.0.1:8000`.
+
 The configured endpoint must support Streamable MCP (it returns `text/event-stream` and accepts
-`application/json, text/event-stream`). The code sets this automatically, but some public MCP gateways
-still return `406` when an unsupported transport is used.
+`application/json, text/event-stream`).
+
+By default, any local MCP detected on `DATAGOUV_MCP_HOST:DATAGOUV_MCP_PORT` is preferred over a configured
+remote endpoint. Set `DATAGOUV_MCP_FORCE_REMOTE=true` to keep the explicitly configured endpoint.
 
 You can also run the French Open Data MCP locally and point the service at it:
+
+```bash
+./scripts/run_datagouv_mcp_local.sh up
+```
+
+This helper script:
+
+```bash
+./scripts/run_datagouv_mcp_local.sh health
+```
+
+It clones the MCP repository if needed and runs it under `/tmp/datagouv-mcp`. To stop:
+
+```bash
+./scripts/run_datagouv_mcp_local.sh down
+```
+
+Manual local run (non-script):
 
 ```bash
 cd /tmp
 git clone https://github.com/datagouv/datagouv-mcp.git
 cd datagouv-mcp
-MCP_HOST=0.0.0.0 docker compose up -d
-```
-
-Then use:
-
-```bash
-export DATAGOUV_MCP_ENDPOINT="http://127.0.0.1:8000/mcp"
-export DATAGOUV_MCP_TOOL="search_datasets"
+MCP_HOST=0.0.0.0 DATAGOUV_API_ENV=prod LOG_LEVEL=INFO docker compose up -d
 ```
 
 If you do not use Docker, use `uv`:

@@ -9,7 +9,9 @@ use email_interface::types::{GlobalContext, QueueBackendKind};
 use reqwest::Url;
 use rig::client::{CompletionClient, ProviderClient};
 use rig::providers::gemini;
+use std::net::{SocketAddr, TcpStream, ToSocketAddrs};
 use std::path::PathBuf;
+use std::time::Duration;
 
 const DEFAULT_GEMINI_MODEL: &str = "gemini-2.5-flash";
 const DEFAULT_GEMINI_FALLBACK_MODEL: &str = "gemini-1.5-flash";
@@ -78,7 +80,15 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         .ok()
         .and_then(|value| value.parse::<u64>().ok())
         .unwrap_or(30);
-    context.datagouv_mcp_endpoint = env_value("DATAGOUV_MCP_ENDPOINT");
+    let force_remote_mcp = env_value("DATAGOUV_MCP_FORCE_REMOTE")
+        .is_some_and(|value| matches!(value.to_ascii_lowercase().as_str(), "1" | "true" | "yes"));
+    let configured_mcp_endpoint = env_value("DATAGOUV_MCP_ENDPOINT");
+    let local_mcp_endpoint = resolve_datagouv_mcp_endpoint();
+    context.datagouv_mcp_endpoint = select_datagouv_mcp_endpoint(
+        configured_mcp_endpoint,
+        local_mcp_endpoint,
+        force_remote_mcp,
+    );
     context.datagouv_mcp_tool = std::env::var("DATAGOUV_MCP_TOOL")
         .ok()
         .map(|value| value.trim().to_string())
@@ -142,6 +152,80 @@ fn env_value(name: &str) -> Option<String> {
         .ok()
         .map(|value| value.trim().to_string())
         .filter(|value| !value.is_empty())
+}
+
+fn select_datagouv_mcp_endpoint(
+    configured_endpoint: Option<String>,
+    local_endpoint: Option<String>,
+    force_remote: bool,
+) -> Option<String> {
+    if force_remote {
+        return configured_endpoint;
+    }
+
+    if let Some(local_endpoint) = local_endpoint {
+        if let Some(configured_endpoint) = configured_endpoint {
+            if is_local_datagouv_endpoint(&configured_endpoint) {
+                println!(
+                    "Datagouv MCP endpoint points to local instance; using {configured_endpoint}."
+                );
+                return Some(configured_endpoint);
+            }
+
+            println!(
+                "Datagouv MCP local instance is available at {local_endpoint}; overriding configured endpoint ({configured_endpoint}) to use local tools."
+            );
+            return Some(local_endpoint);
+        }
+
+        println!(
+            "Datagouv MCP local instance detected. Using local tools endpoint: {local_endpoint}."
+        );
+        return Some(local_endpoint);
+    }
+
+    configured_endpoint
+}
+
+fn is_local_datagouv_endpoint(endpoint: &str) -> bool {
+    endpoint.contains("://127.0.0.1")
+        || endpoint.contains("://localhost")
+        || endpoint.contains("://[::1]")
+}
+
+fn resolve_datagouv_mcp_endpoint() -> Option<String> {
+    let host = std::env::var("DATAGOUV_MCP_HOST")
+        .ok()
+        .map(|value| value.trim().to_string())
+        .filter(|value| !value.is_empty())
+        .unwrap_or_else(|| "127.0.0.1".to_string());
+    let port = std::env::var("DATAGOUV_MCP_PORT")
+        .ok()
+        .and_then(|value| value.trim().parse::<u16>().ok())
+        .unwrap_or(8000);
+
+    if is_local_datagouv_mcp_available(&host, port) {
+        let endpoint = format!("http://{host}:{port}/mcp");
+        println!("Datagouv MCP auto-detected locally at {endpoint} (host={host}, port={port}).");
+        Some(endpoint)
+    } else {
+        println!(
+            "Hint: DATAGOUV_MCP_ENDPOINT is unset and local MCP at {host}:{port} is not reachable. Start it with scripts/run_datagouv_mcp_local.sh or set DATAGOUV_MCP_ENDPOINT for hosted mode."
+        );
+        None
+    }
+}
+
+fn is_local_datagouv_mcp_available(host: &str, port: u16) -> bool {
+    let endpoint = format!("{host}:{port}");
+    let socket_addrs = match endpoint.to_socket_addrs() {
+        Ok(addrs) => addrs,
+        Err(_) => return false,
+    };
+
+    socket_addrs.into_iter().any(|socket_addr: SocketAddr| {
+        TcpStream::connect_timeout(&socket_addr, Duration::from_millis(400)).is_ok()
+    })
 }
 
 fn ensure_runtime_access() -> Result<(), AgentError> {
@@ -268,5 +352,34 @@ fn ensure_gemini_key() -> Result<(), AgentError> {
         Err(AgentError::Context(
             "GEMINI_API_KEY is required to run the Rig specialists".to_string(),
         ))
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::select_datagouv_mcp_endpoint;
+
+    #[test]
+    fn keeps_configured_local_when_set_explicitly() {
+        let configured = Some("http://127.0.0.1:8001/mcp".to_string());
+        let local = Some("http://127.0.0.1:8000/mcp".to_string());
+        let actual = select_datagouv_mcp_endpoint(configured.clone(), local, false);
+        assert_eq!(actual, configured);
+    }
+
+    #[test]
+    fn prefers_local_over_remote_by_default() {
+        let configured = Some("https://mcp.data.gouv.fr/mcp".to_string());
+        let local = Some("http://127.0.0.1:8000/mcp".to_string());
+        let actual = select_datagouv_mcp_endpoint(configured, local.clone(), false);
+        assert_eq!(actual, local);
+    }
+
+    #[test]
+    fn force_remote_keeps_configured_value() {
+        let configured = Some("https://mcp.data.gouv.fr/mcp".to_string());
+        let local = Some("http://127.0.0.1:8000/mcp".to_string());
+        let actual = select_datagouv_mcp_endpoint(configured.clone(), local, true);
+        assert_eq!(actual, configured);
     }
 }

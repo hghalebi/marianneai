@@ -1194,6 +1194,11 @@ impl Specialist for DatagouvResponder {
         };
 
         let endpoint_ref = endpoint.as_deref().expect("endpoint filtered above");
+        println!(
+            "DatagouvResponder: using MCP endpoint {endpoint_ref} with tool '{tool_name}' and timeout {}s.",
+            ctx.datagouv_mcp_timeout_seconds
+        );
+
         let reply_with_source = self
             .answer_with_retries(
                 endpoint_ref,
