@@ -8,7 +8,19 @@ Owner: Hamze / Team
 - Classify which emails are actually about MarianneAI
 - Extract sender intent into queue-ready task candidates
 - Decide whether each email is clear enough to become a queue item
-- Persist valid tasks to Postgres on GCP
+- Persist valid tasks to Postgres when queueing is enabled
+
+## Current integration position
+
+The email service is operational, but it is not yet fully unified with the web-facing backend contract.
+
+Current reply priority:
+
+1. `ANSWER_ENDPOINT_URL`
+2. `DATAGOUV_MCP_ENDPOINT`
+3. temporary busy fallback reply
+
+That means the email path already works, but it still needs a final decision on whether it should call the same `POST /query` contract used by the web app or continue using a dedicated answer-endpoint adapter.
 
 ## Architecture
 
